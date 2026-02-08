@@ -1,4 +1,5 @@
 //Menu driven calculator using functions
+package _Java;
 import java.util.Scanner;
 
 public class MenuCalculator {
