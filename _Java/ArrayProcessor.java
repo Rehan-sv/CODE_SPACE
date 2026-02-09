@@ -1,4 +1,4 @@
-package _Java.assignment;
+package _Java;
 import java.util.Scanner;
 
 
@@ -28,7 +28,7 @@ public class ArrayProcessor {
 
             switch (choice) {
                 case 1:
-                    display(arr);
+                    display (arr);
                     break;
                 case 2:
                     bubbleSort(arr);
