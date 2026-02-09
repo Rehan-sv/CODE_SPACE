@@ -11,7 +11,7 @@ class MultiTable {
         int limit = input.nextInt();
 
         System.out.println("\nMultiplication Table up to " + limit + "x" + limit + ":\n");
-
+    
         // Outer loop for rows
         for (int i = 1; i <= limit; i++) {
             // Inner loop for columns
@@ -20,7 +20,7 @@ class MultiTable {
                 System.out.printf("%4d", (i * j));
             }
             // New line after each row is complete
-            System.out.println();
+            System.out.println();   
         }
         
         input.close();

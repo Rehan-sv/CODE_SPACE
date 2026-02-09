@@ -1,4 +1,4 @@
-package _Java;
+package _Java.assignment;
 public class piramid_number {
     public static void main(String[] args){
 int n = 3;
