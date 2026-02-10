@@ -1,1 +1,0 @@
-& C:/Users/user/AppData/Local/Programs/Python/Python313/python.exe "c:/Users/user/OneDrive/Documents/VS CODE/files_imp/Code for reading the data from file.py"

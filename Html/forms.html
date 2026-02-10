@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration Form</title>
+    <style>
+        body{
+            font-family: Arial, sans-serif;
+            background-image: url("nebula.jpg");
+            background-position:center;
+            background-size: cover;
+            background-repeat: no-repeat;   
+        }
+        .container{
+            width: 600px;
+            margin: auto;
+            border-color: aliceblue;
+            padding: 15px;
+        }
+        h1, h3{
+            text-align: center;
+            color: aliceblue;
+        }
+        table{
+            width: 100%;
+            border-spacing: 10px;
+        }
+        input[type="text"],
+        input[type="date"],
+        input[type="email"],
+        input[type="tel"]{
+            width: 100%;
+        }
+        .container{
+         color: aliceblue;
+        }
+        .p{
+         color: black;
+        }
+        
+    </style>
+</head>
+<body>
+
+<div class="container";">
+    <h1>COMPANY NAME</h1>
+    <h3>REGISTRATION FORM</h3>
+
+    <h3>PERSONAL INFORMATION</h3>
+    <table>
+        <tr>
+            <td>Full Name</td>
+            <td><input type="text"></td>
+        </tr>
+        <tr>
+            <td>Gender</td>
+            <td>
+                <input type="radio" name="gender"> Male
+                <input type="radio" name="gender"> Female
+            </td>
+        </tr>
+        <tr>
+            <td>Date of Birth</td>
+            <td><input type="date"></td>
+        </tr>
+        <tr>
+            <td>Place of Birth</td>
+            <td><input type="text"></td>
+        </tr>
+        <tr>
+            <td>Nationality</td>
+            <td><input type="text"></td>
+        </tr>
+        <tr>
+            <td>Marital Status</td>
+            <td>
+                <input type="radio" name="status"> Single
+                <input type="radio" name="status"> Married
+                <input type="radio" name="status"> Widowed
+            </td>
+        </tr>
+        <tr>
+            <td>National ID No</td>
+            <td><input type="text"></td>
+        </tr>
+    </table>
+
+    <h3>CONTACT INFORMATION</h3>
+    <table>
+        <tr>
+            <td>Address</td>
+            <td><input type="text"></td>
+        </tr>
+        <tr>
+            <td>City</td>
+            <td><input type="text"></td>
+        </tr>
+        <tr>
+            <td>State</td>
+            <td><input type="text"></td>
+        </tr>
+        <tr>
+            <td>Zip Code</td>
+            <td><input type="text"></td>
+        </tr>
+        <tr>
+            <td>Phone</td>
+            <td><input type="tel"></td>
+        </tr>
+        <tr>
+            <td>Email</td>
+            <td><input type="email"></td>
+        </tr>
+    </table>
+
+    <h3>SERVICE INFORMATION</h3>
+    <table>
+        <tr>
+            <td>Service Name</td>
+            <td><input type="text"></td>
+        </tr>
+        <tr>
+            <td class="p">Payment Detail</td>
+            <td class="p">
+                <input type="radio" name="pay"> Cash
+                <input type="radio" name="pay"> Debit Card
+                <input type="radio" name="pay"> Credit Card
+            </td>
+        </tr>
+        <tr>
+            <td class="p">Comments</td>
+            <td><input type="text"></td>
+        </tr>
+    </table>
+
+    <p class="p">Signature: _______________________</p>
+</div>
+
+</body>
+</html>
