@@ -1,11 +1,11 @@
-package checking;
+package _Java.practice;
 import java.util.Scanner;
 
 public class checking_numbers{
     public static void main(String[] args) {
         Scanner data = new Scanner(System.in);
 
-        System.out.print("Enter a number: ");		
+        System.out.print("Enter a number: ");
         int num = data.nextInt();
 
         if (num > 0) {
