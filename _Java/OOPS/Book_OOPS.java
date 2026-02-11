@@ -22,7 +22,7 @@ public class Book_OOPS {
     // Method to update details
     public void setDetails(String title, String author, double price) {
         this.title = title;
-        this.author = author;
+        this.author = author;   
         this.price = price;
     }
 
