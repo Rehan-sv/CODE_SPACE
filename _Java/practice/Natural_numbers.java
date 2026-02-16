@@ -1,4 +1,4 @@
-package assignment_2;
+package _Java.practice;
 
 public class Natural_numbers {
 	public static void main(String[] args) {
