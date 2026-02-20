@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Temparature",
+            "request": "launch",
+            "mainClass": "_Java.practice.Temparature",
+            "projectName": "VS CODE_40aa7b73"
+        },
+        {
+            "type": "java",
             "name": "array",
             "request": "launch",
             "mainClass": "_Java.practice.array",

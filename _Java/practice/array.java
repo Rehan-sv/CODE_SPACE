@@ -4,7 +4,7 @@
 // public class array {
 //     public static void main(String[] args){
 //         Scanner s =new Scanner(System.in);
-//         System.out.println("Enter the size: ");
+//         System.out.println("Enter the size: ");  
 //         int n =s.nextInt();
 
 //         int arr[]=new int[n];
