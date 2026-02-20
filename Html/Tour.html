@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Travel Services Table</title>
+    <style>
+        body{
+            font-family: Arial;
+            background:#f2f2f2;
+            display:flex;
+            justify-content:center;
+            margin-top:20px;
+        }
+
+        table{
+            border-collapse:collapse;
+        }
+
+        .main{
+            width:1100px;
+            border:2px solid #666;
+            background:#eee;
+        }
+
+        th, td{
+            border:2px solid #888;
+            padding:12px;
+            font-size:20px;
+        }
+
+        th{
+            background:#f8f8f8;
+            font-weight:bold;
+            text-align:center;
+        }
+
+        .nested{
+            width:100%;
+            margin-top:10px;
+        }
+    </style>
+</head>
+<body>
+
+<table class="main">
+
+    <!-- Header -->
+    <tr>
+        <th rowspan="2">Category</th>
+        <th colspan="2">Details</th>
+        <th rowspan="2">Price</th>
+    </tr>
+
+    <tr>
+        <th>Service Name</th>
+        <th>Description</th>
+    </tr>
+
+    <!-- Flights -->
+    <tr>
+        <td rowspan="2">Flights</td>
+        <td>Domestic Flights</td>
+        <td>Flights within the country</td>
+        <td>$100 and up</td>
+    </tr>
+
+    <tr>
+        <td>International Flights</td>
+        <td>Flights to international destinations</td>
+        <td>$500 and up</td>
+    </tr>
+
+    <!-- Hotels -->
+    <tr>
+        <td rowspan="2">Hotels</td>
+        <td>Luxury Hotels</td>
+        <td>High-end accommodations with premium services</td>
+        <td>$200/night</td>
+    </tr>
+
+    <tr>
+        <td>Budget Hotels</td>
+        <td>Affordable and comfortable stays</td>
+        <td>$50/night</td>
+    </tr>
+
+    <!-- Nested Table -->
+    <tr>
+        <td colspan="4">
+
+            <table class="nested">
+                <tr>
+                    <th>Tour Package</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                </tr>
+
+                <tr>
+                    <td>Guided Tours</td>
+                    <td>Professional guides with sightseeing tours</td>
+                    <td>$300/tour</td>
+                </tr>
+
+                <tr>
+                    <td>Adventure Travel</td>
+                    <td>Outdoor activities like hiking, rafting, safaris</td>
+                    <td>$500/adventure</td>
+                </tr>
+            </table>
+
+        </td>
+    </tr>
+
+</table>
+
+</body>
+</html>

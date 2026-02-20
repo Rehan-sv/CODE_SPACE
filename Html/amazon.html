@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Today's Deals</title>
+    <style>
+        body{
+            background:#222;
+            display:flex;
+            justify-content:center;
+            margin-top:20px;
+        }
+
+        .container{
+            width:900px;
+            background:#f2f2f2;
+            border:2px solid white;
+            padding:10px;
+        }
+        
+        h1{
+            margin:5px 0 15px 5px;
+        }
+        .row{
+            display:flex;
+            gap:10px;
+        }
+
+        .main-banner{
+            flex:2;
+            background:#ddd;
+            height:250px;
+            overflow:hidden;
+        }
+
+        .main-banner img{
+            width:100%;
+            height:100%;
+            object-fit:cover;
+        }
+
+        .card{
+            flex:1;
+            background:white;
+            border:1px solid #ccc;
+            padding:10px;
+            text-align:left;
+        }
+
+        .card img{
+            width:100%;
+            height:140px;
+            object-fit:cover;
+            margin-bottom:10px;
+        }
+
+        .price{
+            font-weight:bold;
+            margin-top:5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Today's Deals</h1>
+
+    <div class="row">
+
+        <!-- Main Deal Banner -->
+        <div class="main-banner">
+            <img src="deal-banner.jpg" alt="Deal Banner">
+        </div>
+
+        <!-- Product 1 -->
+        <div class="card">
+            <img src="bedsheet.jpg" alt="Bedsheet">
+            Bedsure Twin Sheets Set, Cooling Sheets...
+            <div class="price">$42.99</div>
+        </div>
+
+        <!-- Product 2 -->
+        <div class="card">
+            <img src="holder.jpg" alt="Tablet Holder">
+            Cup Holder Tablet Mount for iPad...
+            <div class="price">$26.99</div>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
