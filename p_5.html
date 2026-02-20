@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registration Form</title>
+    <style>
+        body {
+    
+            background: #222;
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }   
+
+        .form-box {
+            border: 3px solid #555;
+            padding: 10px;
+            background: white;
+        }
+
+        table {
+            background: #14c5ea;
+            border-collapse: collapse;
+            width: 700px;
+        }
+
+        th {
+            background: #f3f3b0;
+            color: red;
+            font-size: 40px;
+            padding: 10px;
+        }
+
+        td {
+            border: 5px solid white;
+            padding: 10px;
+            font-size: 30px;
+        }
+
+        input, textarea, select {
+            font-size: 22px;
+            padding: 5px;
+        }
+
+        .buttons input {
+            width: 180px;
+            height: 50px;
+            font-size: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-box">
+<form>
+<table>
+
+<tr>
+    <th colspan="2">Registration Form</th>
+</tr>
+
+<tr>
+    <td>Enter Name</td>
+    <td><input type="text"></td>
+</tr>
+
+<tr>
+    <td>Enter Password</td>
+    <td><input type="password"></td>
+</tr>
+
+<tr>
+    <td>Enter Address</td>
+    <td><textarea rows="4" cols="30"></textarea></td>
+</tr>
+
+<tr>
+    <td>Select Game</td>
+    <td>
+        <input type="checkbox"> Hockey <br>
+        <input type="checkbox"> Football <br>
+        <input type="checkbox"> Badminton <br>
+        <input type="checkbox"> Cricket <br>
+        <input type="checkbox"> Volleyball
+    </td>
+</tr>
+
+<tr>
+    <td>Gender</td>
+    <td>
+        <input type="radio" name="g"> Male
+        <input type="radio" name="g"> Female
+    </td>
+</tr>
+
+<tr>
+    <td>Select ur age</td>
+    <td>
+        <select>
+            <option>Select</option>
+            <option>18</option>
+            <option>19</option>
+            <option>20</option>
+        </select>
+    </td>
+</tr>
+
+<tr>
+    <td>Select Photo</td>
+    <td><input type="file"></td>
+</tr>
+
+<tr class="buttons">
+    <td colspan="2" style="text-align:center;">
+        <input type="button" value="Click Me">
+        <input type="reset" value="Reset">
+        <input type="submit" value="Submit Form">
+    </td>
+</tr>
+
+</table>
+</form>
+</div>
+
+</body>
+</html>

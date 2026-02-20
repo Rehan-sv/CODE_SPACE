@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Contact Form</title>
+    <style>
+        body{
+            background:#222;
+            display:flex;
+            justify-content:center;
+            
+            font-family: Arial;
+        }
+
+        .container{
+            width:500px;
+            background:#f5ddb2;
+            padding:20px;
+            border:5px solid white;
+        }
+
+        .title{
+            background:#d46464;
+            color:white;
+            text-align:center;
+            font-size:40px;
+            padding:15px;
+            
+        }
+
+        input, textarea{
+            width:100%;
+            padding:12px;
+            margin-bottom:20px;
+            border:none
+            font-size:22px;
+            background:#eee;
+        }
+
+        button{
+            width:100%;
+            background:gold;
+            border:2px solid black;
+            padding:15px;
+            font-size:28px;
+            cursor:pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="title">Contact Us!</div>
+
+    <form>
+        <input type="text" placeholder="Name.....">
+        <input type="email" placeholder="Email....">
+        <input type="text" placeholder="Subject.....">
+        <textarea rows="5" placeholder="Message........"></textarea>
+
+        <button type="submit">SEND MESSAGE</button>
+    </form>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forms Exercise</title>
+
+<style>
+body {
+    background: #2c2c2c;
+    font-family: Arial, sans-serif;
+}
+
+/* ---------- Registration Form ---------- */
+.registration-container {
+    width: 420px;
+    margin: 30px auto;
+    border: 3px solid red;
+    background: #0fc0e7;
+    padding: 10px;
+}
+
+.registration-container h2 {
+    text-align: center;
+    background: #f7e6a5;
+    margin: 0 0 10px 0;
+    padding: 8px;
+    color: red;
+}
+
+.row {
+    display: flex;
+    border: 1px solid white;
+    margin-bottom: 5px;
+}
+
+.row label {
+    width: 140px;
+    padding: 8px;
+    background: #1cb3d8;
+}
+
+.row input,
+.row select,
+.row textarea {
+    flex: 1;
+    margin: 5px;
+    padding: 4px;
+}
+
+textarea {
+    resize: none;
+    height: 50px;
+}
+
+.games {
+    padding: 5px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.buttons button {
+    width: 32%;
+    padding: 8px;
+    background: #ddd;
+    border: 1px solid gray;
+    cursor: pointer;
+}
+
+/* ---------- Contact Form ---------- */
+.contact-container {
+    width: 420px;
+    margin: 30px auto;
+    background: #f3e2c2;
+    padding: 15px;
+    border: 3px solid red;
+}
+
+.contact-container h2 {
+    text-align: center;
+    background: #c65a5a;
+    color: white;
+    margin: 0 0 15px 0;
+    padding: 12px;
+}
+
+.contact-container input,
+.contact-container textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: none;
+    box-sizing: border-box;
+}
+
+.contact-container textarea {
+    height: 100px;
+    resize: none;
+}
+
+.contact-container button {
+    width: 100%;
+    padding: 12px;
+    background: gold;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Registration Form -->
+<div class="registration-container">
+    <h2>Registration Form</h2>
+
+    <form>
+        <div class="row">
+            <label>Enter Name</label>
+            <input type="text">
+        </div>
+
+        <div class="row">
+            <label>Enter Password</label>
+            <input type="password">
+        </div>
+
+        <div class="row">
+            <label>Enter Address</label>
+            <textarea></textarea>
+        </div>
+
+        <div class="row">
+            <label>Select Game</label>
+            <div class="games">
+                <input type="checkbox"> Hockey<br>
+                <input type="checkbox"> Football<br>
+                <input type="checkbox"> Badminton<br>
+                <input type="checkbox"> Cricket<br>
+                <input type="checkbox"> Volleyball
+            </div>
+        </div>
+
+        <div class="row">
+            <label>Gender</label>
+            <div style="padding:8px;">
+                <input type="radio" name="gender"> Male
+                <input type="radio" name="gender"> Female
+            </div>
+        </div>
+
+        <div class="row">
+            <label>Select ur age</label>
+            <select>
+                <option>Select</option>
+                <option>18-25</option>
+                <option>26-35</option>
+                <option>36-45</option>
+            </select>
+        </div>
+
+        <div class="row">
+            <label>Select Photo</label>
+            <input type="file">
+        </div>
+
+        <div class="buttons">
+            <button type="button">Click Me</button>
+            <button type="reset">Reset</button>
+            <button type="submit">Submit Form</button>
+        </div>
+    </form>
+</div>
+
+<!-- Contact Form -->
+<div class="contact-container">
+    <h2>Contact Us!</h2>
+    <form>
+        <input type="text" placeholder="Name.....">
+        <input type="email" placeholder="Email.....">
+        <input type="text" placeholder="Subject.....">
+        <textarea placeholder="Message........."></textarea>
+        <button type="submit">SEND MESSAGE</button>
+    </form>
+</div>
+
+</body>
+</html>
