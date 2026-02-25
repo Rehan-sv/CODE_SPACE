@@ -1,34 +1,150 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Contact Form</title>
+<title>Project Evaluation Form</title>
+
+<style>
+    body{
+        background:#f2f2f2;
+        padding:20px;
+    }
+
+    .container{
+        width:700px;
+        margin:auto;
+        background:white;
+        padding:20px;
+        border-radius:8px;
+    }
+
+    table{
+        width:100%;
+        border-collapse:collapse;
+        margin-top:10px;
+    }
+
+    th, td{
+        border:1px solid #ccc;
+        padding:8px;
+        text-align:center;
+    }
+
+    th{
+        background:#e6e6e6;
+    }
+
+    textarea{
+        width:100%;
+        height:100px;
+        padding:8px;
+        border-radius:6px;
+        border:1px solid #ccc;
+    }
+
+    .score-section{
+        margin-top:20px;
+        padding:15px;
+        border:1px solid #ccc;
+        border-radius:6px;
+    }
+
+    button{
+        margin-top:15px;
+        padding:10px 15px;
+        background:#4e73df;
+        color:white;
+        border:none;
+        border-radius:6px;
+        cursor:pointer;
+    }
+
+
+</style>
+
 </head>
-<body style="background:#2c2c2c; font-family:Arial;">
+<body>
 
-<div style="width:420px; margin:30px auto; background:#f3e2c2; padding:15px; border:3px solid red;">
+<div class="container">
 
-    <h2 style="text-align:center; background:#c65a5a; color:white; margin:0 0 15px 0; padding:12px;">
-        Contact Us!
-    </h2>
+<h2>Evaluate the techniques used within the project</h2>
 
-    <form>
-        <input type="text" placeholder="Name....."
-            style="width:100%; padding:10px; margin-bottom:10px; border:none; box-sizing:border-box;">
+<form>
 
-        <input type="email" placeholder="Email....."
-            style="width:100%; padding:10px; margin-bottom:10px; border:none; box-sizing:border-box;">
+<h3>Techniques:</h3>
 
-        <input type="text" placeholder="Subject....."
-            style="width:100%; padding:10px; margin-bottom:10px; border:none; box-sizing:border-box;">
+<table>
+<tr>
+    <th></th>
+    <th>Good</th>
+    <th>OK</th>
+    <th>Bad</th>
+    <th>Missing</th>
+    <th>N/A</th>
+</tr>
 
-        <textarea placeholder="Message........."
-            style="width:100%; height:100px; padding:10px; margin-bottom:10px; border:none; box-sizing:border-box;"></textarea>
+<tr>
+    <td>HTML</td>
+    <td><input type="radio" name="html"></td>
+    <td><input type="radio" name="html"></td>
+    <td><input type="radio" name="html"></td>
+    <td><input type="radio" name="html"></td>
+    <td><input type="radio" name="html"></td>
+</tr>
 
-        <button type="submit"
-            style="width:100%; padding:12px; background:gold; border:none; font-weight:bold;">
-            SEND MESSAGE
-        </button>
-    </form>
+<tr>
+    <td>CSS</td>
+    <td><input type="radio" name="css"></td>
+    <td><input type="radio" name="css"></td>
+    <td><input type="radio" name="css"></td>
+    <td><input type="radio" name="css"></td>
+    <td><input type="radio" name="css"></td>
+</tr>
+
+<tr>
+    <td>JavaScript</td>
+    <td><input type="radio" name="js"></td>
+    <td><input type="radio" name="js"></td>
+    <td><input type="radio" name="js"></td>
+    <td><input type="radio" name="js"></td>
+    <td><input type="radio" name="js"></td>
+</tr>
+
+<tr>
+    <td>PHP</td>
+    <td><input type="radio" name="php"></td>
+    <td><input type="radio" name="php"></td>
+    <td><input type="radio" name="php"></td>
+    <td><input type="radio" name="php"></td>
+    <td><input type="radio" name="php"></td>
+</tr>
+
+<tr>
+    <td>Ajax</td>
+    <td><input type="radio" name="ajax"></td>
+    <td><input type="radio" name="ajax"></td>
+    <td><input type="radio" name="ajax"></td>
+    <td><input type="radio" name="ajax"></td>
+    <td><input type="radio" name="ajax"></td>
+</tr>
+
+</table>
+
+<h3>Techniques Notes:</h3>
+<textarea></textarea>
+
+<div class="score-section">
+<h3>Overall Score:</h3>
+
+<input type="radio" name="score"> (5) Very Good <br>
+<input type="radio" name="score"> (4) Good <br>
+<input type="radio" name="score"> (3) Acceptable <br>
+<input type="radio" name="score"> (2) Poor <br>
+<input type="radio" name="score"> (1) Unacceptable
+</div>
+
+<button type="submit">Submit Evaluation</button>
+
+</form>
 
 </div>
 
