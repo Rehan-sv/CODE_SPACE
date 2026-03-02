@@ -15,7 +15,7 @@ public class FactorialProgram {
         for (int i = 1; i <= n; i++) {
             fact = fact * i;
         }
-
+        
         return fact;
     }
 

@@ -1,4 +1,4 @@
-package _Java.assignment;
+package _Java.practice;
 
     class Student {
     int rollNo;
@@ -8,10 +8,6 @@ package _Java.assignment;
     // Constructor
     Student(int rollNo) {
         this.rollNo = rollNo;
-    }
-
-    public Student(int roll) {
-        //TODO Auto-generated constructor stub
     }
 
     void setExitEntry(int ed, int em, int ey, int id, int im, int iy) {
