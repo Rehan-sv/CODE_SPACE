@@ -55,7 +55,13 @@ public class ArrayProcessor {
         sc.close();
     }
 
-    
+    public static void display (int [] arr) {
+        for(int n:arr){
+            System.out.println(n);
+
+        }
+        
+    }
 
     // Bubble Sort Function
     public static void bubbleSort(int[] arr) {

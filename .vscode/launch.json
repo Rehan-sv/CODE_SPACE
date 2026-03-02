@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ArrayProcessor",
+            "request": "launch",
+            "mainClass": "_Java.practice.ArrayProcessor",
+            "projectName": "VS CODE_40aa7b73"
+        },
+        {
+            "type": "java",
             "name": "Temparature",
             "request": "launch",
             "mainClass": "_Java.practice.Temparature",
