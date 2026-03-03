@@ -6,6 +6,34 @@
     "configurations": [
         {
             "type": "java",
+            "name": "pallindrom",
+            "request": "launch",
+            "mainClass": "_Java.assignment.pallindrom",
+            "projectName": "VS CODE_40aa7b73"
+        },
+        {
+            "type": "java",
+            "name": "Palindrom_n",
+            "request": "launch",
+            "mainClass": "_Java.assignment.Palindrom_n",
+            "projectName": "VS CODE_40aa7b73"
+        },
+        {
+            "type": "java",
+            "name": "Odd_Asterisk",
+            "request": "launch",
+            "mainClass": "_Java.assignment.Odd_Asterisk",
+            "projectName": "VS CODE_40aa7b73"
+        },
+        {
+            "type": "java",
+            "name": "Floyd_BinaryT_riangle",
+            "request": "launch",
+            "mainClass": "_Java.assignment.Floyd_BinaryT_riangle",
+            "projectName": "VS CODE_40aa7b73"
+        },
+        {
+            "type": "java",
             "name": "ArrayProcessor",
             "request": "launch",
             "mainClass": "_Java.practice.ArrayProcessor",
