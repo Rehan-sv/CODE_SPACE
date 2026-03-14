@@ -6,6 +6,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "rev_arr",
+            "request": "launch",
+            "mainClass": "_Java.exam.rev_arr",
+            "projectName": "VS CODE_40aa7b73"
+        },
+        {
+            "type": "java",
+            "name": "fact",
+            "request": "launch",
+            "mainClass": "_Java.exam.fact",
+            "projectName": "VS CODE_40aa7b73"
+        },
+        {
+            "type": "java",
             "name": "sum_even",
             "request": "launch",
             "mainClass": "_Java.exam.sum_even",
