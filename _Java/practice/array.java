@@ -20,42 +20,42 @@
 //     }
 // }
 
-1: SUm of the elements
+// 1: SUm of the elements
 
-int[] arr = {10, 20, 30};
-int sum = 0;
+// int[] arr = {10, 20, 30};
+// int sum = 0;
 
-for(int num : arr) {
-    sum += num;
-}
+// for(int num : arr) {
+//     sum += num;
+// }
 
-System.out.println("Sum = " + sum);
+// System.out.println("Sum = " + sum);
 
-2: largest number ++++
+// 2: largest number ++++
 
-int[] arr = {10, 50, 20};
+// int[] arr = {10, 50, 20};
 
-int max = arr[0];
+// int max = arr[0];
 
-for(int num : arr) {
-    if(num > max) {
-        max = num;
-    }
-}
-System.out.println("Largest = " + max);
+// for(int num : arr) {
+//     if(num > max) {
+//         max = num;
+//     }
+// }
+// System.out.println("Largest = " + max);
 
-3) Search an element 
-int key = 20;
-boolean found = false;
+// 3) Search an element 
+// int key = 20;
+// boolean found = false;
 
-for(int num : arr) {
-    if(num == key) {
-        found = true;
-        break;
-    }
-}
+// for(int num : arr) {
+//     if(num == key) {
+//         found = true;
+//         break;
+//     }
+// }
 
-if(found)
-    System.out.println("Found");
-else
-    System.out.println("Not Found");
+// if(found)
+//     System.out.println("Found");
+// else
+//     System.out.println("Not Found");

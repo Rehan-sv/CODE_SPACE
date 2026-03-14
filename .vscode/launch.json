@@ -6,6 +6,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "sum_even",
+            "request": "launch",
+            "mainClass": "_Java.exam.sum_even",
+            "projectName": "VS CODE_40aa7b73"
+        },
+        {
+            "type": "java",
+            "name": "sum_even",
+            "request": "launch",
+            "mainClass": "_Java.assignment.sum_even",
+            "projectName": "VS CODE_40aa7b73"
+        },
+        {
+            "type": "java",
             "name": "pallindrom",
             "request": "launch",
             "mainClass": "_Java.assignment.pallindrom",
