@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Table Layout</title>
+
+<style>
+body{
+    font-family: Arial;
+}
+
+table{
+    border-collapse: collapse;
+    width:100%;
+}
+
+th{
+    background:#4CAF50;
+    color:white;
+    padding:15px;
+}
+
+td{
+    border:1px solid #ccc;
+    padding:20px;
+    vertical-align:top;
+}
+
+.blue{
+    color:blue;
+}
+
+.italic{
+    font-style:italic;
+}
+
+.yellow{
+    background:#f5df2e;
+}
+
+.rowheader{
+    background:#1976d2;
+    color:white;
+    text-align:center;
+    width:150px;
+}
+
+.nested td{
+    border:1px solid #ccc;
+}
+
+img{
+    width:80px;
+}
+
+</style>
+</head>
+
+<body>
+
+<table>
+
+<tr>
+<th>Header Column 1</th>
+<th>Header Column 2</th>
+<th>Header Column 3</th>
+<th>Header Column 4</th>
+</tr>
+
+<tr>
+
+<td>
+<b>Row 2 - Item 1</b><br>
+<span class="italic">Some italic text</span>
+</td>
+
+<td>
+Row 2 - Item 2<br>
+<span class="blue">Blue Text</span>
+</td>
+
+<td>
+
+<table class="nested" width="100%">
+
+<tr>
+<td class="rowheader">Row 1 Header</td>
+<td align="center">
+<img src="https://picsum.photos/80">
+</td>
+</tr>
+
+<tr>
+<td class="rowheader">Row 2 Header</td>
+<td align="center">
+<audio controls>
+<source src="sample.mp3" type="audio/mpeg">
+</audio>
+</td>
+</tr>
+
+<tr>
+<td class="rowheader">Row 3 Header</td>
+<td align="center">
+<img src="https://picsum.photos/81">
+</td>
+</tr>
+
+</table>
+
+</td>
+
+<td class="yellow">
+<b>Row 2 - Item 4</b><br>
+<span style="color:red;">A second line</span>
+</td>
+
+</tr>
+
+<tr>
+
+<td colspan="4">
+
+Row 3: Nested Table 2
+
+<table class="nested" width="100%">
+
+<tr>
+<td class="rowheader">Row 1 Header</td>
+<td align="center">
+<video width="120" controls>
+<source src="sample.mp4" type="video/mp4">
+</video>
+</td>
+</tr>
+
+<tr>
+<td class="rowheader">Row 2 Header</td>
+<td align="center">
+<img src="https://picsum.photos/82">
+</td>
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+</html>

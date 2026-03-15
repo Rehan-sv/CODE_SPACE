@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Technology Usage Survey</title>
+
+<style>
+body{
+    font-family: Arial;
+    background:#2b6cb0;
+}
+
+.container{
+    width:600px;
+    margin:30px auto;
+    background:white;
+    padding:20px;
+    border-radius:6px;
+}
+
+h2{
+    text-align:center;
+}
+
+.section{
+    margin-bottom:20px;
+}
+
+input, select{
+    width:100%;
+    padding:8px;
+    margin:5px 0 10px 0;
+}
+
+.buttons{
+    display:flex;
+    gap:10px;
+}
+
+.submit{
+    background:green;
+    color:white;
+    border:none;
+    padding:10px;
+    width:100%;
+}
+
+.reset{
+    background:red;
+    color:white;
+    border:none;
+    padding:10px;
+    width:100%;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Comprehensive Technology Usage Survey</h2>
+
+<form>
+
+<div class="section">
+<h3>Personal Information</h3>
+
+<label>Name:</label>
+<input type="text">
+
+<label>Age:</label>
+<input type="number">
+
+<label>Email:</label>
+<input type="email">
+
+<label>Date of Birth:</label>
+<input type="date">
+</div>
+
+
+<div class="section">
+<h3>Device Ownership</h3>
+
+<label>Select the devices you own:</label>
+
+<select multiple size="4">
+<option>Smartphone</option>
+<option>Laptop</option>
+<option>Desktop</option>
+<option>Tablet</option>
+</select>
+
+<label>Other Devices:</label>
+<input type="text" placeholder="Please specify other devices">
+
+</div>
+
+
+<div class="section">
+<h3>Usage Patterns</h3>
+
+<label>Average daily usage of devices (in hours)</label>
+<input type="range" min="0" max="12">
+
+<p>Types of activities:</p>
+
+<input type="checkbox"> Work <br>
+<input type="checkbox"> Entertainment <br>
+<input type="checkbox"> Education <br>
+<input type="checkbox"> Social <br><br>
+
+<label>Favorite Applications:</label>
+<input type="text" placeholder="e.g., WhatsApp, YouTube">
+
+</div>
+
+
+<div class="section">
+<h3>Preferences and Future Interests</h3>
+
+<label>Technology interests:</label>
+
+<select multiple size="3">
+<option>Artificial Intelligence</option>
+<option>Machine Learning</option>
+<option>Cyber Security</option>
+</select>
+
+<p>Would you be interested in participating in technology trials?</p>
+
+<input type="radio" name="trial"> Yes <br>
+<input type="radio" name="trial"> No
+
+</div>
+
+
+<div class="buttons">
+<button class="submit" type="submit">Submit</button>
+<button class="reset" type="reset">Reset</button>
+</div>
+
+</form>
+
+</div>
+
+</body>
+</html>
