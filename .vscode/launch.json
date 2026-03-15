@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "system",
+            "request": "launch",
+            "mainClass": "system",
+            "projectName": "VS CODE_40aa7b73"
+        },
+        {
+            "type": "java",
             "name": "BankSystem",
             "request": "launch",
             "mainClass": "_Java.exam.BankSystem",

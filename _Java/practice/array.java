@@ -10,7 +10,7 @@
 //         int arr[]=new int[n];
 
 //         for(int i =0;i<n;i++){
-//             System.out.println("Enter the number: ");
+//             System.out.pr    intln("Enter the number: ");
 //             arr[i] =s.nextInt();
 //         }
 //         System.out.println("The elements are: ");
