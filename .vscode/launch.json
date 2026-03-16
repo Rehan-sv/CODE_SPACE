@@ -6,6 +6,34 @@
     "configurations": [
         {
             "type": "java",
+            "name": "jai",
+            "request": "launch",
+            "mainClass": "exam.jai",
+            "projectName": "VS CODE_40aa7b73"
+        },
+        {
+            "type": "java",
+            "name": "jai",
+            "request": "launch",
+            "mainClass": "_Java.exam.jai",
+            "projectName": "VS CODE_40aa7b73"
+        },
+        {
+            "type": "java",
+            "name": "binary_dec",
+            "request": "launch",
+            "mainClass": "_Java.exam.binary_dec",
+            "projectName": "VS CODE_40aa7b73"
+        },
+        {
+            "type": "java",
+            "name": "University",
+            "request": "launch",
+            "mainClass": "_Java.exam.University",
+            "projectName": "VS CODE_40aa7b73"
+        },
+        {
+            "type": "java",
             "name": "system",
             "request": "launch",
             "mainClass": "system",

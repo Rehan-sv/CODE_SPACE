@@ -71,6 +71,18 @@ public class University {
 
                 case 2:
 
+//     for(int i = 0; i < 9; i++)
+// {
+//     for(int j = 0; j < 9 - i; j++)
+//     {
+//         if(students[j].per < students[j+1].per)
+//         {
+//             result temp = students[j];   
+//             students[j] = students[j+1];
+//             students[j+1] = temp;
+//         }
+//     }
+// }
                     for (int i = 0; i < 9; i++) {
 
                         for (int j = i + 1; j < 10; j++) {

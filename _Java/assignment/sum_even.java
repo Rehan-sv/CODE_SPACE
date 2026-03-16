@@ -10,7 +10,7 @@ public class sum_even {
         int arr[]= new int[n];
         for (int i =0;i<n;i++){
             System.out.println("Enter the numbers"+i);
-            arr[i]= s.nextInt();
+            arr[i]= s.nextInt();                
         }
         for (int a:arr){
             System.out.println("The numbers r:"+a);
