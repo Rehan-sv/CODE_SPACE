@@ -19,11 +19,6 @@ public class sum_even {
             }
         }
         System.out.println("The sum is:"+sum);
-
-
-        
-
-
     }
     
 }
