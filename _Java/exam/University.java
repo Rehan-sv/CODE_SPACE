@@ -83,8 +83,7 @@ public class University {
 //         }
 //     }
 // }
-                    for (int i = 0; i < 9; i++) {
-
+                    for (int i = 0; i < 9; i++)
                         for (int j = i + 1; j < 10; j++) {
 
                             if (students[i].per < students[j].per) {
