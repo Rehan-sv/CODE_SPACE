@@ -15,3 +15,4 @@ else:
     min = a
     
 print("The gcd of", a, "and", b, "is:", hcf(max, min))
+    
