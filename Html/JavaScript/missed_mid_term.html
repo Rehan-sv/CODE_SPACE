@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Student Re-registration Form</title>
+
+<style>
+body{
+font-family: Arial;
+background-color:#f2f2f2;
+text-align:center;
+}
+
+form{
+background:white;
+padding:20px;
+width:350px;
+margin:auto;
+border-radius:10px;
+box-shadow:0 0 10px gray;
+}
+
+input{
+width:90%;
+padding:8px;
+margin:8px;
+}
+
+#hint{
+color:blue;
+font-size:14px;
+}
+
+#emailMsg{
+font-weight:bold;
+}
+
+#message{
+font-weight:bold;
+margin-top:10px;
+}
+</style>
+
+<script>
+
+function showHint(){
+document.getElementById("hint").innerHTML =
+"Format: Two uppercase letters followed by 3 or 4 digits (e.g., CS101)";
+}
+
+function validateEmail(){
+
+var email = document.getElementById("email").value;
+var pattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+
+if(pattern.test(email)){
+document.getElementById("emailMsg").innerHTML="Valid email format!";
+document.getElementById("emailMsg").style.color="green";
+}
+else{
+document.getElementById("emailMsg").innerHTML="Invalid email format!";
+document.getElementById("emailMsg").style.color="red";
+}
+
+}
+
+function validateForm(){
+
+var name=document.getElementById("name").value;
+var sid=document.getElementById("sid").value;
+var email=document.getElementById("email").value;
+var course=document.getElementById("course").value;
+var date=document.getElementById("date").value;
+
+var coursePattern=/^[A-Z]{2}[0-9]{3,4}$/;
+var idPattern=/^[A-Z]{2}-[0-9]{4}$/;
+
+if(name=="" || sid=="" || email=="" || course=="" || date==""){
+document.getElementById("message").innerHTML="Please fill in all required fields.";
+document.getElementById("message").style.color="red";
+return false;
+}
+
+if(!coursePattern.test(course)){
+alert("Invalid Course Code. Example: CS101");
+return false;
+}
+
+if(!idPattern.test(sid)){
+alert("Invalid Student ID. Example: CS-2024");
+return false;
+}
+
+document.getElementById("message").innerHTML="Form submitted successfully!";
+document.getElementById("message").style.color="green";
+return false;
+
+}
+
+</script>
+
+</head>
+
+<body>
+
+<h2>Student Re-registration Form</h2>
+
+<form onsubmit="return validateForm()">
+
+Student Name<br>
+<input type="text" id="name"><br>
+
+Student ID<br>
+<input type="text" id="sid"><br>
+
+Email Address<br>
+<input type="text" id="email" onblur="validateEmail()">
+<p id="emailMsg"></p>
+
+Course Code<br>
+<input type="text" id="course" onfocus="showHint()">
+<p id="hint"></p>
+
+Exam Date<br>
+<input type="date" id="date"><br>
+
+<input type="submit" value="Submit">
+
+</form>
+
+<p id="message"></p>
+
+</body>
+</html>
