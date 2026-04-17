@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "Main",
+            "projectName": "VS CODE_40aa7b73"
+        },
+        {
+            "type": "java",
             "name": "jai",
             "request": "launch",
             "mainClass": "exam.jai",
