@@ -71,9 +71,7 @@ class Customer {
     private String name;
     private String phoneNumber;
 
-    // Default constructor
-    Customer() {
-    }
+
 
     // Parameterized constructor
     Customer(int customerId, String name, String phoneNumber) {
