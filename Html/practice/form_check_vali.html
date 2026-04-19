@@ -1,0 +1,18 @@
+<html>
+    <body>
+        <input type="number" id="numb" min="100" max="300" required>
+        <input type="submit" onclick="check()">
+        <p id="demo"></p>
+        <script>
+            function check(){
+                var numb=document.getElementById("numb");
+                if(!numb.checkValidity()){
+                    document.getElementById("demo").innerHTML=numb.validationMessage;
+                }else{
+                    document.getElementById("demo").innerHTML="input is Okeyyy"
+                }
+            }
+        </script>
+
+    </body>
+</html>
