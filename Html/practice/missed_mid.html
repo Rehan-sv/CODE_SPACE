@@ -1,0 +1,131 @@
+<html>
+<title>Student Re-registration Form</title>
+
+<style>
+body{
+font-family: Arial;
+background-color:#f4f4f4;
+}
+
+.container{
+width:400px;
+margin:auto;
+background:white;
+padding:20px;
+border-radius:5px;
+box-shadow:0 0 10px gray;
+}
+
+input{
+width:100%;
+padding:8px;
+margin:5px 0;
+}
+
+button{
+background-color:blue;
+color:white;
+padding:10px;
+border:none;
+width:100%;
+}
+
+.hint{
+color:gray;
+font-size:12px;
+}
+
+.valid{
+color:green;
+}
+
+.invalid{
+color:red;
+}
+</style>
+<body>
+
+<div class="container">
+
+<h2>Student Re-registration Form</h2>
+
+<form onsubmit="validateForm()">
+
+<label>Student Name</label>
+<input type="text" id="name">
+
+<label>Student ID</label>
+<input type="text" id="studentid" placeholder="CS-2024">
+
+<label>Email</label>
+<input type="text" id="email" onblur="validateEmail()">
+<p id="emailMsg"></p>
+
+<label>Course Code</label>
+<input type="text" id="course" onfocus="showHint()">
+<p id="hint" class="hint"></p>
+
+<label>Exam Date</label>
+<input type="date" id="date">
+
+<button type="submit">Submit</button>
+
+</form>
+
+</div>
+<script>
+
+function showHint(){
+document.getElementById("hint").innerHTML =
+"Format: Two uppercase letters followed by 3 or 4 digits (e.g., CS101)";
+}
+
+function validateEmail(){
+var email=document.getElementById("email").value;
+var pattern=/^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+ 
+if(pattern.test(email)){
+document.getElementById("emailMsg").innerHTML="✔ Valid email format!";
+document.getElementById("emailMsg").className="valid";
+}
+else{
+document.getElementById("emailMsg").innerHTML="❌ Invalid email format!";
+document.getElementById("emailMsg").className="invalid";
+}
+}
+
+function validateForm(){
+
+var name=document.getElementById("name").value;
+var id=document.getElementById("studentid").value;
+var email=document.getElementById("email").value;
+var course=document.getElementById("course").value;
+var date=document.getElementById("date").value;
+
+var coursePattern=/^[A-Z]{2}[0-9]{3,4}$/;
+var idPattern=/^[A-Z]{2}-[0-9]{4}$/;
+
+if(name=="" || id=="" || email=="" || course=="" || date==""){
+alert("❌ Please fill in all required fields.");
+return false;
+}
+
+if(!coursePattern.test(course)){
+alert("Invalid Course Code");
+return false;
+}
+
+if(!idPattern.test(id)){
+alert("Invalid Student ID format");
+return false;
+}
+
+alert("Form submitted successfully!");
+return true;
+
+}
+
+</script>   
+
+</body>
+</html>
