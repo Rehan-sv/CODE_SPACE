@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Donor Registration</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#ffe6e6;
+}
+
+.formbox{
+width:400px;
+margin:auto;
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0px 0px 10px gray;
+}
+
+input,select{
+width:100%;
+padding:8px;
+margin:8px 0;
+}
+
+button{
+background:#b30000;
+color:white;
+padding:10px;
+border:none;
+width:100%;
+cursor:pointer;
+}
+
+button:hover{
+background:#800000;
+}
+
+.message{
+font-size:14px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="formbox">
+
+<h2>Donor Registration</h2>
+
+<form id="donorForm">
+
+Name
+<input type="text" id="name">
+
+Age
+<input type="number" id="age">
+
+Gender
+<select id="gender">
+<option>Male</option>
+<option>Female</option>
+</select>
+
+Blood Group
+<select id="blood">
+<option>A+</option>
+<option>B+</option>
+<option>O+</option>
+<option>AB+</option>
+</select>
+
+Last Donation Date
+<input type="date" id="lastdate">
+
+Weight (kg)
+<input type="number" id="weight">
+
+Hours of Sleep
+<input type="number" id="sleep">
+
+Mobile Number
+<input type="text" id="mobile">
+
+Email
+<input type="text" id="email">
+
+Medical Conditions
+<br>
+<input type="checkbox"> No chronic illness
+<br>
+<input type="checkbox"> No medication restrictions
+<br><br>
+
+<button type="submit">Register</button>
+
+<p id="msg"></p>
+
+</form>
+
+</div>
+
+<script>
+
+var nameField=document.getElementById("name");
+var mobileField=document.getElementById("mobile");
+
+nameField.onblur=function(){
+
+var pattern=/^[A-Za-z ]+$/;
+
+if(!pattern.test(nameField.value)){
+alert("Name should contain only alphabets");
+}
+
+};
+
+mobileField.onblur=function(){
+
+var mobilePattern=/^[0-9]{10}$/;
+
+if(!mobilePattern.test(mobileField.value)){
+alert("Mobile number must be 10 digits");
+}
+
+};
+
+document.getElementById("donorForm").onsubmit=function(event){
+
+var weight=document.getElementById("weight").value;
+var sleep=document.getElementById("sleep").value;
+var gender=document.getElementById("gender").value;
+var lastdate=document.getElementById("lastdate").value;
+
+
+
+
+</script>
+
+</body>
+</html>
