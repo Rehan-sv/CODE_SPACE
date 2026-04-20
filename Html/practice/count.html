@@ -1,0 +1,13 @@
+<html>
+    <body>
+        <textarea id="area" onkeyup="count()"></textarea>
+        <input id="submit" type="submit">
+        <p id="show">number of charc</p>
+        <script>
+            function count(){
+                var text=document.getElementById("area").value;
+                document.getElementById("show").innerHTML="THe total charc"+text.length
+            }
+        </script>
+    </body>
+</html>

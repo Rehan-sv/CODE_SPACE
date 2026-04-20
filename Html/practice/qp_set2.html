@@ -1,0 +1,129 @@
+<html>
+
+<head>
+
+<style>
+
+body{
+font-family: Arial;
+background:#f4f4f4;
+}
+
+form{
+width:350px;
+margin:auto;
+background:white;
+padding:20px;
+border-radius:5px;
+}
+
+input,textarea{
+width:100%;
+padding:6px;
+margin:5px 0;
+}
+
+span{
+color:red;
+font-size:12px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<form onsubmit="return validateForm()">
+
+Name:
+<input type="text" id="name">
+<span id="nameError"></span>
+
+Email:
+<input type="text" id="email">
+<span id="emailError"></span>
+
+Password:
+<input type="password" id="pass">
+<span id="passError"></span>
+
+Date of Birth:
+<input type="date" id="dob">
+<span id="dobError"></span>
+
+Upload File:
+<input type="file" id="file">
+<span id="fileError"></span>
+
+Comments:
+<textarea id="comment"></textarea>
+
+<br><br>
+
+<input type="submit" value="Submit">
+
+</form>
+
+
+<script>
+
+function validateForm(){
+
+var name=document.getElementById("name").value;
+var email=document.getElementById("email").value;
+var password=document.getElementById("pass").value;
+var dob=document.getElementById("dob").value;
+var file=document.getElementById("file").files[0];
+
+var emailPattern=/^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+var passPattern=/^(?=.*[A-Z])(?=.*[0-9]).{6,}$/;
+
+document.getElementById("nameError").innerHTML="";
+document.getElementById("emailError").innerHTML="";
+document.getElementById("passError").innerHTML="";
+document.getElementById("dobError").innerHTML="";
+document.getElementById("fileError").innerHTML="";
+
+if(name=="" || pass=="" || email=="" || dob=="" || file==""){
+                    alert("Enter all the val")
+                    return false;
+                }
+
+if(!emailPattern.test(email)){
+document.getElementById("emailError").innerHTML="Invalid email";
+return false;
+}
+
+if(!passPattern.test(password)){
+document.getElementById("passError").innerHTML="Password must contain uppercase and number";
+return false;
+}
+
+var year=new Date(dob).getFullYear();
+var current=new Date().getFullYear();
+
+if(year<1900 || year>current){
+document.getElementById("dobError").innerHTML="Invalid DOB";
+return false;
+}
+
+var type=file.type;
+var size=file.size;
+
+if(type!="image/jpeg" && type!="image/png"){
+document.getElementById("fileError").innerHTML="Only JPG allowed";
+return false;
+}
+
+if(size>10*1024*1024){
+document.getElementById("fileError").innerHTML="File must be <10MB";
+return false;
+}
+
+}
+
+</script>
+
+</body>
+</html>
