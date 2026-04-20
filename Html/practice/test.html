@@ -2,7 +2,20 @@
     <body>
         <form name="myform" onsubmit="validateform()">
             <label for=""> name </label>
-            <input type="text" id="name "> 
+            <input type="text" id="name ">
+            <label> ID </label>
+            <input type="text" id="id" placeholder="CS-2024">
+            <label>email</label>
+            <input type="text" id="email" onblur="validateEmail()">
+            <label>course code  </label>
+            <input type="text" id="course" onfocus="showHint()">
+            <p id="hint"></p>
+            <input type="submit" id="Submit">
         </form>
+        <script>
+            function showHint(){
+                
+            }
+        </script>
     </body>
 </html>
