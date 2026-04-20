@@ -1,8 +1,8 @@
 <html>
     <body>
-        <form name="myform" onsubmit="validateform()">
+        <form name="myform" onsubmit=" return validateform()">
             <label for=""> name </label>
-            <input type="text" id="name ">
+            <input type="text" id="name">
             <label> ID </label>
             <input type="text" id="id" placeholder="CS-2024">
             <label>email</label>
@@ -40,21 +40,23 @@
 
                 if(name=="" || id=="" || email=="" || course=="" || date==""){
                     alert("Enter all the val")
+                    return false;
                 }
-
                 var coursePattern=/^[A-Z]{2}[0-9]{3,4}$/;
                 var idPattern=/^[A-Z]{2}-[0-9]{4}$/;
-                
                 if(!coursePattern.test(course)){
                 alert("Invalid Course Code");
+                return false;
 
                 }
 
                 if(!idPattern.test(id)){
                 alert("Invalid Student ID format");
+                return false;
                 }
 
                 alert("Form submitted successfully!");{
+                    return true;
 
                 }
             }   
