@@ -1,0 +1,101 @@
+<html>
+<body>
+       
+<form onsubmit="return validateForm()">
+
+<fieldset>
+<legend>Personal Information</legend>
+
+Name:
+<input type="text" id="name"><br><br>
+
+DOB:
+<input type="date" id="dob"><br><br>
+
+Gender:
+<select id="gender">
+<option>Male</option>
+<option>Female</option>
+</select>
+
+</fieldset>
+
+<br>
+
+<fieldset>
+<legend>Contact Information</legend>
+
+Country:
+<input type="text" id="country"><br><br>
+
+Mobile Number:
+<input type="text" id="mobile"><br><br>
+
+Email:
+<input type="email" id="email">
+
+</fieldset>
+
+<br>
+
+<fieldset>
+<legend>Degree Information</legend>
+
+<input type="checkbox"> BE
+<input type="checkbox"> BTech
+<input type="checkbox"> ME
+<input type="checkbox"> MTech
+<input type="checkbox"> MSc
+<input type="checkbox"> PhD
+
+</fieldset>
+
+<br>
+<input type="submit" value="Register">
+
+</form>
+<script>
+function validateForm(){
+
+var name=document.getElementById("name").value;
+var coun=document.getElementById("country").value.toLowerCase();
+var email=document.getElementById("email").value;
+var mob=document.getElementById("mobile").value;
+var dob=document.getElementById("dob").value;
+
+var mobpattern=/^[0-9]{10}$/;
+var namepattern=/^[A-Za-z ]$/;
+
+if(coun=="india" || coun=="china"){
+alert("Registration Fee: $19");
+}
+else{
+alert("Registration Fee: $20");
+}
+
+if(!mobpattern.test(mob)){
+alert("Enter the mobile number correctly!");
+return false;
+}
+
+if(!namepattern.test(name)){
+alert("Enter the name correctly!");
+return false;
+}
+
+var birthYear=new Date(dob).getFullYear();
+var currentYear=new Date().getFullYear();
+
+if(currentYear-birthYear < 18){
+alert("Age must be 18+");
+return false;
+}
+
+alert("Form submitted successfully!");
+return true;
+
+}
+</script>
+</body>
+
+</html>
