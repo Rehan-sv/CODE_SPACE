@@ -1,0 +1,29 @@
+<html>
+<body>
+
+<h2>Shopping Items</h2>
+
+<ul>
+<li onclick="addItem(100)">Shirt - ₹100</li>
+<li onclick="addItem(200)">Shoes - ₹200</li>
+<li onclick="addItem(50)">Cap - ₹50</li>
+</ul>
+
+<h3 id="cart">Total Amount: ₹0</h3>
+
+<script>
+
+var total=0;
+
+function addItem(price){
+
+total = total + price;
+
+document.getElementById("cart").innerHTML = "Total Amount: ₹" + total;
+
+}
+
+</script>
+
+</body>
+</html>
