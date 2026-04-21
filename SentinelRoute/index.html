@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sentinel Route — OSINT Investigation Dashboard for IP/Domain geolocation, traceroute visualization, TLS inspection, and AI-powered forensic analysis.">
+    <title>Sentinel Route — OSINT Investigation Dashboard</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='none' stroke='%2300ffaa' stroke-width='5' stroke-dasharray='18 9'/><circle cx='50' cy='50' r='28' fill='none' stroke='%2300aaff' stroke-width='3'/><circle cx='50' cy='50' r='8' fill='%2300ffaa'/></svg>">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Leaflet.js -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ═══════════════ LOADING OVERLAY ═══════════════ -->
+    <div id="loading-overlay">
+        <div class="loader-content">
+            <svg class="sentinel-logo-anim" viewBox="0 0 120 120" width="80" height="80">
+                <circle cx="60" cy="60" r="54" fill="none" stroke="url(#grad-loader)" stroke-width="3" stroke-dasharray="12 6" class="spin-ring"/>
+                <circle cx="60" cy="60" r="38" fill="none" stroke="rgba(0,255,170,0.25)" stroke-width="1.5"/>
+                <circle cx="60" cy="60" r="6" fill="#00ffaa"/>
+                <defs>
+                    <linearGradient id="grad-loader" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#00ffaa"/>
+                        <stop offset="100%" stop-color="#00aaff"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+            <h2>SENTINEL ROUTE</h2>
+            <p class="loader-sub">Initializing OSINT Engine…</p>
+        </div>
+    </div>
+
+    <!-- ═══════════════ TOP BAR ═══════════════ -->
+    <header id="top-bar">
+        <div class="brand">
+            <svg class="brand-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#00ffaa" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 2 A10 10 0 0 1 12 22" stroke-dasharray="4 3"/>
+                <line x1="2" y1="12" x2="22" y2="12" stroke-dasharray="3 2"/>
+                <circle cx="12" cy="12" r="3" fill="#00ffaa" stroke="none"/>
+            </svg>
+            <span class="brand-text">SENTINEL<span class="accent">ROUTE</span></span>
+        </div>
+
+        <!-- Search -->
+        <div class="search-wrapper" id="search-wrapper">
+            <div class="search-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+            </div>
+            <input type="text" id="search-input" placeholder="Enter IP address or domain…" autocomplete="off" spellcheck="false">
+            <button id="search-btn" title="Investigate">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+        </div>
+
+        <!-- Top-bar right controls -->
+        <div class="top-controls">
+            <!-- AI Toggle Button -->
+            <button id="ai-toggle-btn" class="ai-toggle-btn" title="Toggle AI Investigator">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2a4 4 0 0 1 4 4v2a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z"/>
+                    <path d="M18 14a6 6 0 0 1-12 0"/>
+                    <circle cx="9" cy="7" r="1" fill="currentColor"/>
+                    <circle cx="15" cy="7" r="1" fill="currentColor"/>
+                    <path d="M8 22h8"/>
+                    <path d="M12 18v4"/>
+                </svg>
+                <span class="ai-toggle-label">AI</span>
+            </button>
+
+            <!-- Status -->
+            <div class="top-status">
+                <span class="status-dot" id="status-dot"></span>
+                <span class="status-text" id="status-text">STANDBY</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- ═══════════════ MAP CANVAS ═══════════════ -->
+    <div id="map"></div>
+
+    <!-- ═══════════════ HUD: LEFT PANEL — Target Intel ═══════════════ -->
+    <aside id="panel-left" class="hud-panel">
+        <div class="panel-body scrollable-panel" id="left-panel-scroll">
+            <!-- Target Intelligence Section -->
+            <div class="panel-section">
+                <div class="panel-header">
+                    <span class="panel-icon">◉</span>
+                    <h3>Target Intelligence</h3>
+                </div>
+                <div id="intel-body">
+                    <div class="intel-placeholder">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+                        <p>Awaiting target input…</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TLS Certificate Section (hidden by default) -->
+            <div class="panel-section tls-section" id="tls-section" style="display:none;">
+                <div class="panel-header">
+                    <span class="panel-icon">🔒</span>
+                    <h3>TLS Certificate</h3>
+                </div>
+                <div id="tls-body">
+                    <div class="intel-placeholder">
+                        <p>Fetching certificate data…</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ═══════════════ HUD: RIGHT PANEL — Route / Traceroute ═══════════════ -->
+    <aside id="panel-right" class="hud-panel">
+        <div class="panel-header">
+            <span class="panel-icon">⟁</span>
+            <h3>Route Analysis</h3>
+        </div>
+        <div class="panel-body" id="route-body">
+            <div class="intel-placeholder">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                <p>No route data yet</p>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ═══════════════ AI INVESTIGATOR PANEL ═══════════════ -->
+    <aside id="ai-panel" class="ai-panel collapsed">
+        <div class="ai-panel-header" id="ai-panel-header">
+            <div class="ai-panel-title">
+                <span class="ai-icon-pulse"></span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2">
+                    <path d="M12 2a4 4 0 0 1 4 4v2a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z"/>
+                    <path d="M18 14a6 6 0 0 1-12 0"/>
+                    <circle cx="9" cy="7" r="1" fill="var(--accent)"/>
+                    <circle cx="15" cy="7" r="1" fill="var(--accent)"/>
+                </svg>
+                <span>AI Investigator</span>
+            </div>
+            <button class="ai-collapse-btn" id="ai-collapse-btn" title="Collapse">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+        </div>
+        <div class="ai-chat-body" id="ai-chat-body">
+            <div class="ai-welcome-msg">
+                <div class="ai-msg assistant">
+                    <div class="ai-msg-avatar">AI</div>
+                    <div class="ai-msg-content">
+                        <p>Hello, I'm your AI Investigation Assistant. I'll analyze targets and provide intelligence insights when you run an investigation.</p>
+                        <span class="ai-msg-time">System</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ai-chat-input-area">
+            <input type="text" id="ai-chat-input" placeholder="Ask about the investigation…" autocomplete="off" spellcheck="false">
+            <button id="ai-send-btn" title="Send">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+        </div>
+    </aside>
+
+    <!-- ═══════════════ HUD: BOTTOM BAR — Risk + Actions ═══════════════ -->
+    <footer id="bottom-bar">
+        <div class="risk-section">
+            <div class="risk-label">THREAT LEVEL</div>
+            <div class="risk-meter" id="risk-meter">
+                <div class="risk-fill" id="risk-fill"></div>
+            </div>
+            <span class="risk-tag" id="risk-tag">—</span>
+        </div>
+        <div class="metrics-section" id="metrics-section">
+            <div class="metric" id="metric-distance">
+                <span class="metric-label">DISTANCE</span>
+                <span class="metric-value" id="val-distance">—</span>
+            </div>
+            <div class="metric" id="metric-latency">
+                <span class="metric-label">LATENCY</span>
+                <span class="metric-value" id="val-latency">—</span>
+            </div>
+            <div class="metric" id="metric-hops">
+                <span class="metric-label">HOPS</span>
+                <span class="metric-value" id="val-hops">—</span>
+            </div>
+        </div>
+        <div class="actions-section">
+            <button class="action-btn" id="btn-export-json" title="Export JSON" disabled>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                JSON
+            </button>
+            <button class="action-btn" id="btn-export-txt" title="Export TXT" disabled>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                TXT
+            </button>
+            <button class="action-btn accent-btn" id="btn-clear" title="Clear Investigation">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                RESET
+            </button>
+        </div>
+    </footer>
+
+    <!-- ═══════════════ TOAST CONTAINER ═══════════════ -->
+    <div id="toast-container"></div>
+
+    <!-- Modules -->
+    <script src="modules.js"></script>
+    <!-- App Script -->
+    <script src="app.js"></script>
+</body>
+</html>
