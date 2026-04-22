@@ -65,6 +65,15 @@
 
         <!-- Top-bar right controls -->
         <div class="top-controls">
+            <!-- Settings Button (for API keys) -->
+            <button id="settings-btn" class="ai-toggle-btn" title="OSINT Settings & API Keys">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                </svg>
+                <span class="ai-toggle-label">⚙</span>
+            </button>
+
             <!-- AI Toggle Button -->
             <button id="ai-toggle-btn" class="ai-toggle-btn" title="Toggle AI Investigator">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -119,17 +128,42 @@
                 </div>
             </div>
 
-            <!-- Dark Web Breach Intelligence Section (hidden by default) -->
-            <div class="panel-section breach-section" id="breach-section" style="display:none;">
+            <!-- ═══ NEW OSINT SECTIONS (hidden until investigation runs) ═══ -->
+
+            <!-- AbuseIPDB Section -->
+            <div class="panel-section osint-section" id="abuseipdb-section" style="display:none;">
                 <div class="panel-header">
-                    <span class="panel-icon">🕵️</span>
-                    <h3>Breach Intelligence</h3>
+                    <span class="panel-icon">🛡️</span>
+                    <h3>AbuseIPDB</h3>
                 </div>
-                <div id="breach-body">
-                    <div class="intel-placeholder">
-                        <p>Scanning breach databases…</p>
-                    </div>
+                <div id="abuseipdb-body" class="osint-body"></div>
+            </div>
+
+            <!-- WHOIS / RDAP Section -->
+            <div class="panel-section osint-section" id="whois-section" style="display:none;">
+                <div class="panel-header">
+                    <span class="panel-icon">📋</span>
+                    <h3>WHOIS / RDAP</h3>
                 </div>
+                <div id="whois-body" class="osint-body"></div>
+            </div>
+
+            <!-- Shodan InternetDB Section -->
+            <div class="panel-section osint-section" id="shodan-section" style="display:none;">
+                <div class="panel-header">
+                    <span class="panel-icon">🔍</span>
+                    <h3>Shodan InternetDB</h3>
+                </div>
+                <div id="shodan-body" class="osint-body"></div>
+            </div>
+
+            <!-- urlscan.io Section -->
+            <div class="panel-section osint-section" id="urlscan-section" style="display:none;">
+                <div class="panel-header">
+                    <span class="panel-icon">🌐</span>
+                    <h3>urlscan.io</h3>
+                </div>
+                <div id="urlscan-body" class="osint-body"></div>
             </div>
         </div>
     </aside>
@@ -223,13 +257,38 @@
         </div>
     </footer>
 
+    <!-- ═══════════════ SETTINGS MODAL (API Keys) ═══════════════ -->
+    <div id="settings-modal" class="settings-modal">
+        <div class="settings-backdrop" id="settings-backdrop"></div>
+        <div class="settings-content">
+            <div class="settings-header">
+                <h3>⚙ OSINT Settings</h3>
+                <button id="settings-close-btn" class="ai-collapse-btn" title="Close">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="settings-body">
+                <div class="settings-group">
+                    <label class="settings-label">AbuseIPDB API Key</label>
+                    <p class="settings-hint">Free at <a href="https://www.abuseipdb.com" target="_blank" rel="noopener">abuseipdb.com</a> — 1,000 checks/day</p>
+                    <input type="text" id="key-abuseipdb" class="settings-input" placeholder="Paste your AbuseIPDB API key here…" spellcheck="false" autocomplete="off">
+                </div>
+                <p class="settings-note">🔒 Keys are saved in your browser's localStorage only. They never leave your machine.</p>
+                <div class="settings-actions">
+                    <button id="settings-save-btn" class="action-btn" style="border-color:var(--accent);color:var(--accent)">Save Keys</button>
+                    <button id="settings-clear-btn" class="action-btn accent-btn">Clear All Keys</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- ═══════════════ TOAST CONTAINER ═══════════════ -->
     <div id="toast-container"></div>
 
-    <!-- Breach Intelligence -->
-    <script src="breach-intel.js"></script>
     <!-- Modules -->
     <script src="modules.js"></script>
+    <!-- OSINT Integration Modules (AbuseIPDB, WHOIS, Shodan, urlscan) -->
+    <script src="osint-modules.js"></script>
     <!-- App Script -->
     <script src="app.js"></script>
 </body>

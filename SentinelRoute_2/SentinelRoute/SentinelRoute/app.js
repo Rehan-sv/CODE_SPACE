@@ -34,11 +34,20 @@
     const aiChatInput  = $('#ai-chat-input');
     const aiSendBtn    = $('#ai-send-btn');
 
+    // Settings modal refs
+    const settingsBtn     = $('#settings-btn');
+    const settingsModal   = $('#settings-modal');
+    const settingsBackdrop= $('#settings-backdrop');
+    const settingsCloseBtn= $('#settings-close-btn');
+    const settingsSaveBtn = $('#settings-save-btn');
+    const settingsClearBtn= $('#settings-clear-btn');
+
     // ─────────── State ───────────
     let map, tileLayer;
     let currentData = null;
     let originCoords = null;
     let mapLayers = [];  // track all added layers for cleanup
+    let osintResults = null;  // stores results from OSINT modules
 
     // High-risk country codes (known for bulletproof hosting, cybercrime origins)
     const HIGH_RISK_COUNTRIES = [
@@ -477,14 +486,41 @@
                 setStatus('LIVE', 'active');
             }
 
-            // ── Dark Web Breach Intelligence ──
-            let breachResults = null;
-            setStatus('BREACH SCAN…', 'active');
-            breachResults = await BreachIntel.scan(query);
+            // ══════════════════════════════════════════════
+            //  OSINT MODULE LOOKUPS
+            //  We run all 4 modules in parallel using Promise.allSettled.
+            //  This means if one fails, the others still complete.
+            //  "allSettled" is safer than "all" because it never rejects.
+            // ══════════════════════════════════════════════
+            setStatus('OSINT SCAN…', 'active');
+            const isDomain = TLSInspector.isDomain(query);
+
+            const osintPromises = await Promise.allSettled([
+                // 1. Shodan InternetDB — always runs (IP only, free)
+                ShodanLookup.lookup(data.query),
+
+                // 2. WHOIS/RDAP — works for both IPs and domains (free)
+                WhoisLookup.lookup(isDomain ? query : data.query, isDomain),
+
+                // 3. urlscan.io — search existing scans (free)
+                UrlScanIO.search(isDomain ? query : data.query, isDomain),
+
+                // 4. AbuseIPDB — needs API key (free tier)
+                AbuseIPDB.check(data.query)
+            ]);
+
+            // Collect results into a single object for AI & exports
+            osintResults = {
+                shodan:    osintPromises[0].status === 'fulfilled' ? osintPromises[0].value : null,
+                whois:     osintPromises[1].status === 'fulfilled' ? osintPromises[1].value : null,
+                urlscan:   osintPromises[2].status === 'fulfilled' ? osintPromises[2].value : null,
+                abuseipdb: osintPromises[3].status === 'fulfilled' ? osintPromises[3].value : null
+            };
+
             setStatus('LIVE', 'active');
 
-            // ── AI Investigator auto-analysis ──
-            await AIInvestigator.onInvestigationComplete(data, risk, tlsCert, breachResults);
+            // ── AI Investigator auto-analysis (now includes OSINT data) ──
+            await AIInvestigator.onInvestigationComplete(data, risk, tlsCert, osintResults);
 
         } catch (err) {
             setStatus('ERROR', 'error');
@@ -528,7 +564,14 @@
                 lon: originCoords.lon,
                 city: originCoords.city
             } : null,
-            distance_km: originCoords ? Math.round(haversineDistance(originCoords.lat, originCoords.lon, currentData.lat, currentData.lon)) : null
+            distance_km: originCoords ? Math.round(haversineDistance(originCoords.lat, originCoords.lon, currentData.lat, currentData.lon)) : null,
+            // ── OSINT Data (new) ──
+            osint: {
+                shodan: ShodanLookup.getCachedData(),
+                whois: WhoisLookup.getCachedData(),
+                urlscan: UrlScanIO.getCachedData(),
+                abuseipdb: AbuseIPDB.getCachedData()
+            }
         };
 
         downloadBlob(JSON.stringify(report, null, 2), `sentinel_report_${currentData.query}.json`, 'application/json');
@@ -570,11 +613,44 @@
             '',
             '── DISTANCE ──',
             `  Distance      : ${dist} km`,
+        ];
+
+        // ── Append OSINT data to the TXT report ──
+        const shodan = ShodanLookup.getCachedData();
+        if (shodan) {
+            lines.push('', '── SHODAN INTERNETDB ──');
+            lines.push(`  Open Ports    : ${(shodan.ports || []).join(', ') || 'None'}`);
+            lines.push(`  Vulns (CVEs)  : ${(shodan.vulns || []).join(', ') || 'None'}`);
+            lines.push(`  Hostnames     : ${(shodan.hostnames || []).join(', ') || '—'}`);
+        }
+        const whois = WhoisLookup.getCachedData();
+        if (whois) {
+            lines.push('', '── WHOIS / RDAP ──');
+            if (whois.type === 'domain') {
+                lines.push(`  Domain        : ${whois.name}`);
+                lines.push(`  Registrar     : ${whois.registrar}`);
+                lines.push(`  Created       : ${whois.created}`);
+                lines.push(`  Expires       : ${whois.expires}`);
+            } else {
+                lines.push(`  Network       : ${whois.name}`);
+                lines.push(`  Organization  : ${whois.organization}`);
+                lines.push(`  Range         : ${whois.netRange}`);
+            }
+        }
+        const abuse = AbuseIPDB.getCachedData();
+        if (abuse) {
+            lines.push('', '── ABUSEIPDB ──');
+            lines.push(`  Abuse Score   : ${abuse.abuseConfidenceScore || 0}/100`);
+            lines.push(`  Total Reports : ${abuse.totalReports || 0}`);
+            lines.push(`  Last Reported : ${abuse.lastReportedAt || 'Never'}`);
+        }
+
+        lines.push(
             '',
             '═══════════════════════════════════════════════════',
             '  END OF REPORT',
             '═══════════════════════════════════════════════════'
-        ];
+        );
 
         downloadBlob(lines.join('\n'), `sentinel_report_${currentData.query}.txt`, 'text/plain');
         toast('TXT report exported', 'success');
@@ -595,6 +671,7 @@
     // ─────────── Clear / Reset ───────────
     function clearInvestigation() {
         currentData = null;
+        osintResults = null;
         clearMapLayers();
         map.flyTo([20, 0], 3, { duration: 1.5 });
 
@@ -625,10 +702,13 @@
         setStatus('STANDBY', 'idle');
         toast('Investigation cleared', 'info');
 
-        // Clear TLS, Breach & AI modules
+        // Clear TLS, AI, and all OSINT modules
         TLSInspector.clear();
-        BreachIntel.clear();
         AIInvestigator.clear();
+        ShodanLookup.clear();
+        WhoisLookup.clear();
+        UrlScanIO.clear();
+        AbuseIPDB.clear();
     }
 
     // ─────────── Event Bindings ───────────
@@ -646,6 +726,25 @@
 
     btnExportJSON.addEventListener('click', exportJSON);
     btnExportTXT.addEventListener('click', exportTXT);
+
+    // ── Settings Modal Events ──
+    settingsBtn.addEventListener('click', () => APIKeyManager.openSettings());
+    settingsBackdrop.addEventListener('click', () => APIKeyManager.closeSettings());
+    settingsCloseBtn.addEventListener('click', () => APIKeyManager.closeSettings());
+
+    settingsSaveBtn.addEventListener('click', () => {
+        // Read the input field and save the key
+        const abuseKey = $('#key-abuseipdb').value.trim();
+        if (abuseKey) APIKeyManager.saveKey('abuseipdb', abuseKey);
+        APIKeyManager.closeSettings();
+        toast('API keys saved', 'success');
+    });
+
+    settingsClearBtn.addEventListener('click', () => {
+        APIKeyManager.removeKey('abuseipdb');
+        $('#key-abuseipdb').value = '';
+        toast('API keys cleared', 'info');
+    });
     btnClear.addEventListener('click', clearInvestigation);
 
     // ── AI Panel Events ──

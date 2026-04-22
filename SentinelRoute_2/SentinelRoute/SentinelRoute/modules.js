@@ -192,7 +192,7 @@ const AIInvestigator = (() => {
         return { type: 'isp', provider: isp };
     }
 
-    function generateAnalysis(data, risk, tlsCert, breachResults) {
+    function generateAnalysis(data, risk, tlsCert, osint) {
         const infra = classifyInfrastructure(data.isp, data.org, data.hosting, data.mobile);
         const parts = [];
 
@@ -239,26 +239,32 @@ const AIInvestigator = (() => {
             }
         }
 
-        // Breach Intelligence analysis
-        if (breachResults) {
-            parts.push(`\n🕵️ **Dark Web Breach Intelligence:**`);
-            if (breachResults.breachCount === 0) {
-                parts.push(`No known data breaches were found for **${breachResults.domain}**. This is a positive indicator.`);
+        // ── NEW: Shodan InternetDB insights ──
+        if (osint && osint.shodan) {
+            const s = osint.shodan;
+            parts.push(`\n🔍 **Shodan InternetDB:**`);
+            const ports = s.ports || [];
+            const vulns = s.vulns || [];
+            if (ports.length > 0) {
+                parts.push(`Open ports detected: **${ports.join(', ')}** (${ports.length} total).`);
             } else {
-                const totalRec = breachResults.totalExposedRecords >= 1000000
-                    ? (breachResults.totalExposedRecords / 1000000).toFixed(1) + 'M'
-                    : breachResults.totalExposedRecords >= 1000
-                    ? (breachResults.totalExposedRecords / 1000).toFixed(1) + 'K'
-                    : breachResults.totalExposedRecords;
-                parts.push(`🚨 **${breachResults.breachCount} breach(es)** detected affecting **${totalRec} records**. Overall severity: **${breachResults.overallSeverity.toUpperCase()}**.`);
-                const topBreach = breachResults.breaches[0];
-                if (topBreach) {
-                    parts.push(`Most recent: **${topBreach.name}** (${topBreach.date}) — ${topBreach.description}`);
-                    parts.push(`Data exposed: ${topBreach.dataExposed.slice(0, 5).join(', ')}.`);
-                }
-                if (breachResults.breaches.some(b => b.dataExposed.some(d => d.toLowerCase().includes('password')))) {
-                    parts.push(`⚠️ **Passwords were exposed** in one or more breaches. Credential reuse is a significant risk.`);
-                }
+                parts.push(`No open ports found — the host may be well-firewalled.`);
+            }
+            if (vulns.length > 0) {
+                parts.push(`🚨 **${vulns.length} known vulnerability(ies)** found: ${vulns.slice(0, 5).join(', ')}${vulns.length > 5 ? '…' : ''}.`);
+            }
+        }
+
+        // ── NEW: AbuseIPDB insights ──
+        if (osint && osint.abuseipdb) {
+            const a = osint.abuseipdb;
+            parts.push(`\n🛡️ **AbuseIPDB Report:**`);
+            if (a.abuseConfidenceScore > 50) {
+                parts.push(`🚨 High abuse confidence score: **${a.abuseConfidenceScore}/100** with **${a.totalReports}** report(s). This IP has been flagged for malicious activity.`);
+            } else if (a.totalReports > 0) {
+                parts.push(`Abuse score: **${a.abuseConfidenceScore}/100**, **${a.totalReports}** report(s) from **${a.numDistinctUsers}** user(s). Usage type: ${a.usageType || 'Unknown'}.`);
+            } else {
+                parts.push(`Clean record — no abuse reports found. Score: **${a.abuseConfidenceScore}/100**.`);
             }
         }
 
@@ -308,8 +314,8 @@ const AIInvestigator = (() => {
         if (t) t.remove();
     }
 
-    async function onInvestigationComplete(data, risk, tlsCert, breachResults) {
-        investigationContext = { data, risk, tlsCert, breachResults };
+    async function onInvestigationComplete(data, risk, tlsCert, osintResults) {
+        investigationContext = { data, risk, tlsCert, osintResults };
         
         // Expand AI panel if collapsed
         const panel = document.getElementById('ai-panel');
@@ -325,7 +331,7 @@ const AIInvestigator = (() => {
         await new Promise(r => setTimeout(r, 1200));
         hideTyping();
 
-        const analysis = generateAnalysis(data, risk, tlsCert, breachResults);
+        const analysis = generateAnalysis(data, risk, tlsCert, osintResults);
         addMessage('assistant', analysis);
     }
 
@@ -349,7 +355,7 @@ const AIInvestigator = (() => {
             return 'No investigation data available yet. Please run an investigation first by entering an IP or domain in the search bar.';
         }
 
-        const { data, risk, tlsCert, breachResults } = ctx;
+        const { data, risk, tlsCert, osintResults } = ctx;
 
         if (q.includes('ip') || q.includes('address')) {
             return `The target IP is **${data.query}**, located in **${data.city}, ${data.country}** (${data.regionName}). Coordinates: ${data.lat}, ${data.lon}.`;
@@ -377,20 +383,50 @@ const AIInvestigator = (() => {
             const infra = classifyInfrastructure(data.isp, data.org, data.hosting, data.mobile);
             return `Infrastructure type: **${infra.type}** (Provider: **${infra.provider}**). ${data.hosting ? 'This is confirmed as a hosting/data center IP.' : 'This does not appear to be a hosting IP.'}`;
         }
-        if (q.includes('breach') || q.includes('dark web') || q.includes('leak') || q.includes('pwned') || q.includes('exposed') || q.includes('hack')) {
-            if (!breachResults) return 'No breach intelligence data available for this investigation.';
-            if (breachResults.breachCount === 0) return `✅ No known data breaches were found for **${breachResults.domain}**. The domain appears clean in our breach databases.`;
-            const topBreaches = breachResults.breaches.slice(0, 3).map(b => `**${b.name}** (${b.records >= 1000000 ? (b.records/1000000).toFixed(1)+'M' : (b.records/1000).toFixed(0)+'K'} records, ${b.severity})`).join(', ');
-            return `🚨 **${breachResults.breachCount} breach(es)** found for **${breachResults.domain}**. Top breaches: ${topBreaches}. Overall severity: **${breachResults.overallSeverity.toUpperCase()}**.`;
+
+        // ── NEW: OSINT-related queries ──
+        if (q.includes('port') || q.includes('shodan') || q.includes('open port')) {
+            const s = osintResults?.shodan;
+            if (!s) return 'No Shodan data available for this target.';
+            const ports = s.ports || [];
+            const vulns = s.vulns || [];
+            return `🔍 **Shodan InternetDB:** ${ports.length} open port(s): **${ports.join(', ') || 'None'}**. ${vulns.length > 0 ? `🚨 ${vulns.length} CVE(s) found: ${vulns.slice(0, 5).join(', ')}.` : 'No known vulnerabilities.'}`;
         }
-        if (q.includes('summary') || q.includes('report') || q.includes('analyze') || q.includes('full')) {
-            return generateAnalysis(data, risk, tlsCert, breachResults);
+        if (q.includes('vuln') || q.includes('cve')) {
+            const s = osintResults?.shodan;
+            if (!s) return 'No vulnerability data available. Shodan InternetDB data was not fetched.';
+            const vulns = s.vulns || [];
+            return vulns.length > 0 
+                ? `🚨 **${vulns.length} vulnerability(ies)** found: ${vulns.join(', ')}.`
+                : '✓ No known vulnerabilities detected by Shodan InternetDB.';
         }
-        if (q.includes('help')) {
-            return 'You can ask me about: **IP address**, **ISP/owner**, **risk/threat level**, **VPN/proxy**, **TLS/SSL certificate**, **data breaches**, **location**, **cloud/hosting**, or request a full **summary**.';
+        if (q.includes('whois') || q.includes('registr') || q.includes('rdap') || q.includes('owner')) {
+            const w = osintResults?.whois;
+            if (!w) return 'No WHOIS/RDAP data available for this target.';
+            if (w.type === 'domain') {
+                return `📋 **WHOIS:** Domain **${w.name}** | Registrar: **${w.registrar}** | Created: ${w.created} | Expires: ${w.expires}.`;
+            }
+            return `📋 **WHOIS:** Network **${w.name}** | Org: **${w.organization}** | Range: ${w.netRange}.`;
+        }
+        if (q.includes('abuse') || q.includes('report') || q.includes('malicious') || q.includes('abuseipdb')) {
+            const a = osintResults?.abuseipdb;
+            if (!a) return 'No AbuseIPDB data available. Make sure your API key is configured in ⚙ Settings.';
+            return `🛡️ **AbuseIPDB:** Abuse score **${a.abuseConfidenceScore}/100** | Reports: **${a.totalReports}** from **${a.numDistinctUsers}** users | Usage: ${a.usageType || 'Unknown'} | Last report: ${a.lastReportedAt || 'Never'}.`;
+        }
+        if (q.includes('urlscan') || q.includes('scan result')) {
+            const u = osintResults?.urlscan;
+            if (!u || !u.results) return 'No urlscan.io results found for this target.';
+            return `🌐 **urlscan.io:** Found **${u.results.length}** existing scan(s) for this target. Check the urlscan.io panel on the left for details.`;
         }
 
-        return `I can help with investigation queries. Try asking about the **IP**, **ISP**, **risk level**, **TLS certificate**, **location**, or **infrastructure type**. Type "help" for a list of topics.`;
+        if (q.includes('summary') || q.includes('analyze') || q.includes('full')) {
+            return generateAnalysis(data, risk, tlsCert, osintResults);
+        }
+        if (q.includes('help')) {
+            return 'You can ask me about: **IP address**, **ISP/owner**, **risk/threat level**, **VPN/proxy**, **TLS/SSL certificate**, **location**, **cloud/hosting**, **ports/Shodan**, **vulnerabilities/CVEs**, **WHOIS/registrar**, **AbuseIPDB reports**, **urlscan.io**, or request a full **summary**.';
+        }
+
+        return `I can help with investigation queries. Try asking about the **IP**, **ISP**, **risk level**, **TLS certificate**, **location**, **ports**, **vulnerabilities**, **WHOIS**, **AbuseIPDB**, or **urlscan.io**. Type "help" for a full list.`;
     }
 
     function clear() {
