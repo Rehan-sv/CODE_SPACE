@@ -109,10 +109,12 @@ alert("❌ Please fill in all required fields.");
 return false;
 }
 
-if(!coursePattern.test(course)){
+if(course.match(coursePattern)){
 alert("Invalid Course Code");
 return false;
 }
+
+
 
 if(!idPattern.test(id)){
 alert("Invalid Student ID format");

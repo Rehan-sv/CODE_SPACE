@@ -1,0 +1,50 @@
+<html>
+    <style>
+        form{
+            padding: 10px;
+            align-items: center;
+            width: 100%;
+
+
+        }
+        input{
+            text-align: auto;
+            padding: 5px;
+            
+        }
+    </style>
+    <body>
+        <fieldset>
+            <legend>The details </legend>
+            <form onsubmit=" return validate()">
+                
+                <label>Name </label>
+                <input type="text" id="name"><br>
+                <label>email</label>
+                <input type="email" id="email"><br>
+                <label>password</label>
+                <input type="number" id="pass" ><br>
+                <label>Dob</label>
+                <input type="date" id="dob"><br>
+                <label>file upload</label>
+                <input type="file" id="file"><br>
+            </form>
+        </fieldset>
+        <script>
+                var name=document.getElementById("name").value;
+                var email=document.getElementById("email").value;
+                var password=document.getElementById("pass").value;
+                var dob=document.getElementById("dob").value;
+                var file=document.getElementById("file").files[0];
+
+             function validate(){
+                if (name==""||email==""||pass==""||dob==""||file==""){
+                    alert("Enter the all details")
+                } 
+                
+
+
+             }
+        </script>
+    </body>
+</html>
