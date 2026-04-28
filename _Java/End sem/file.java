@@ -9,7 +9,7 @@ public class file {
 
         try {
 
-            // Append mode
+           
             FileWriter fw = new FileWriter("donations.txt", true);
 
             System.out.println("Enter first book title:");
