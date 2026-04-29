@@ -1,5 +1,25 @@
 <html>
+<style>
+
+form{
+width:300px;
+margin:auto;
+}
+
+/* label{
+display:block;
+margin-top:10px;
+} */
+
+input{
+width:100%;
+margin-top:5px;
+}
+
+</style>
     <body>
+        <fieldset>
+            <legend>Details</legend>
         <form name="myform" onsubmit=" return validateform()">
             <label for=""> name </label>
             <input type="text" id="name">
@@ -15,6 +35,7 @@
             <input type="date" id="date">
             <input type="submit" id="Submit">
         </form>
+        </fieldset>
         <script>
             function showHint(){
                 document.getElementById("hint").innerHTML=  "Format: Two uppercase letters followed by 3 or 4 digits (e.g., CS101)"

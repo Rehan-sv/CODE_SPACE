@@ -1,0 +1,145 @@
+<html>
+    <head>
+        <title></title>
+    <style>
+
+    </style>
+    </head>
+    <body>
+        <fieldset>
+            <form onsubmit="return formvalidate()">
+                Name:<input type="text" id="name" onblur="validatename()" required><br>
+                <div class="div1" id="nameerror"></div><br>
+
+                Age:<input type="number" id="age" onblur="validateage()" required><br>
+                <div class="div1" id="ageerror"></div><br>
+
+                Gender:<select id="gender" >
+                    <option>Male</option>
+                    <option>Female</option>
+                </select><br>
+
+                Blood Group:<select>
+                    <option>A+</option>
+                    <option>A-</option>
+                    <option>B+</option>
+                    <option>B-</option>
+                    <option>AB+</option>
+                    <option>AB-</option>
+                    <option>O+</option>
+                    <option>O-</option>
+                </select><br>
+
+                Last donation date:<input type="date" id="date" onblur="validatedate()" required><br>
+                <div class="div1" id="dateerror"></div><br>
+
+                Weight:<input type="number" id="weight" onblur="validateweight()" required><br>
+                <div class="div1" id="weighterror"></div><br>
+                
+                Sleep hours:<input type="number" id="sleep" onblur="validatesleep()" required><br>
+                <div class="div1" id="sleeperror"></div><br>
+
+                Mobile number:<input type="text" id="number" onblur="validatenumber()" required><br>
+                <div class="div1" id="numbererror"></div><br>
+
+                Email:<input type="email"><br>
+                No chronic disease<input type="checkbox" name="disease" required>
+                No medical restrictions<input type="checkbox" name="disease" required>
+
+                <button type="submit">Submit</button>
+                <button type="button" onclick="window.open('index.html','_self') ">Back</button>
+            </form>
+        </fieldset>
+
+        <script>
+            function validatename(){
+                let name=document.getElementById('name').value;
+                if(!/^[A-Za-z ]+$/.test(name)){
+                    document.getElementById('nameerror').innerHTML="Enter a valid name";
+                    return false;
+                }
+                else{
+                    document.getElementById('nameerror').innerHTML="";
+                    return true;
+                }
+
+            }
+            function validatenumber(){
+                let number=document.getElementById('number').value;
+                if(!/^[0-9]{10}$/.test(number)){
+                    document.getElementById('numbererror').innerHTML="Enter a valid mobile number";
+                    return false;
+                }
+                else{
+                    document.getElementById('numbererror').innerHTML="";
+                    return true;
+                }
+
+            }
+            function validateage(){
+                let age=document.getElementById('age').value;
+                if(age<18){
+                    document.getElementById('ageerror').innerHTML="Your age should be greater than 18";
+                    return false;
+                }
+                else{
+                    document.getElementById('ageerror').innerHTML="";
+                    return true;
+                }
+
+            }
+            function validateweight(){
+                let weight=document.getElementById('weight').value;
+                if(weight<55){
+                    document.getElementById('weighterror').innerHTML="Your weight should be greater than 55";
+                    return false;
+                }
+                else{
+                    document.getElementById('weighterror').innerHTML="";
+                    return true;
+                }
+
+            }
+            function validatesleep(){
+                let sleep=document.getElementById('sleep').value;
+                if(sleep<8){
+                    document.getElementById('sleeperror').innerHTML="Your sleep hour should be greater than 8";
+                    return false;
+                }
+                else{
+                    document.getElementById('sleeperror').innerHTML="";
+                    return true;
+                }
+
+            }
+            function validatedate(){
+                let gender=document.getElementById('gender').value;
+                let lastdate=document.getElementById('date').value;
+                let today=new Date();
+                let lastdonation=new Date(lastdate);
+                let diff_date=(today-lastdonation)/(1000*60*60*24);
+                if(gender=="Male" && diff_date<90){
+                    document.getElementById('dateerror').innerHTML="Males should wait for 90 days";
+                    return false
+                }
+                if(gender=="Female" && diff_date<120){
+                    document.getElementById('dateerror').innerHTML="Females should wait for 120 days";
+                    return false;
+                }
+                document.getElementById('dateerror').innerHTML="";
+                return true
+
+            }
+            function formvalidate(){
+                if(!validatename()||!validateage()||!validatedate()||!validatenumber()||!validatesleep()||!validateweight()){
+                return false;
+            }
+            else{
+                alert("Your form has been successfully submitted");
+                return true;
+            }
+        }
+
+        </script>
+    </body>
+</html>
