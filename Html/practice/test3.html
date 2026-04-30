@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>
+function checkSalary() {
+
+    var salary = document.getElementById("salary").value;
+    var tax = document.getElementById("tax");
+
+    if (salary > 50000) {
+        tax.disabled = false;   // unlock tax field
+    } 
+    else {
+        tax.disabled = true;    // lock tax field
+        tax.value = "";
+    }
+
+}
+</script>
+</head>
+
+<body>
+
+<h3>Salary Form</h3>
+
+Salary:
+<input type="number" id="salary" onchange="checkSalary()">
+
+<br><br>
+
+Tax Details:
+<input type="text" id="tax" disabled>
+
+</body>
+</html>
