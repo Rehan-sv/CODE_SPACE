@@ -119,7 +119,7 @@ public class Main_bank {
             System.out.println("Error: " + e.getMessage());
         }
 
-        // Read file
+
         PremiumAccount.readFromFile();
     }
 }
