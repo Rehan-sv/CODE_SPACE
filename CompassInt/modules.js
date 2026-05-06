@@ -1,148 +1,7 @@
 /* ╔══════════════════════════════════════════════════════════════╗
-   ║  SENTINEL ROUTE — AI Investigator & TLS Inspector Modules   ║
+   ║  COMPASSINT — AI Investigator Module                     ║
    ╚══════════════════════════════════════════════════════════════╝ */
 
-// ─────────── TLS / SSL Certificate Inspector ───────────
-const TLSInspector = (() => {
-    let cachedCert = null;
-
-    function isDomain(input) {
-        const domainRegex = /^(?!:\/\/)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
-        const ipRegex = /^(\d{1,3}\.){3}\d{1,3}$/;
-        return domainRegex.test(input.trim()) && !ipRegex.test(input.trim());
-    }
-
-    async function fetchCertificate(domain) {
-        const tlsSection = document.getElementById('tls-section');
-        const tlsBody = document.getElementById('tls-body');
-        
-        tlsSection.style.display = 'block';
-        tlsBody.innerHTML = `
-            <div class="intel-placeholder">
-                <div class="ai-typing-indicator"><span></span><span></span><span></span></div>
-                <p>Analyzing TLS certificate…</p>
-            </div>`;
-
-        try {
-            const res = await fetch(`https://api.ssllabs.com/api/v3/analyze?host=${encodeURIComponent(domain)}&fromCache=on&maxAge=24`);
-            if (!res.ok) throw new Error(`SSL Labs API error: ${res.status}`);
-            const data = await res.json();
-
-            // SSL Labs may still be processing
-            if (data.status === 'IN_PROGRESS' || data.status === 'DNS') {
-                tlsBody.innerHTML = `
-                    <div class="intel-placeholder">
-                        <div class="ai-typing-indicator"><span></span><span></span><span></span></div>
-                        <p>SSL Labs is scanning… retrying in 15s</p>
-                    </div>`;
-                await new Promise(r => setTimeout(r, 15000));
-                return await fetchCertificate(domain);
-            }
-
-            if (data.status === 'ERROR') {
-                throw new Error(data.statusMessage || 'Certificate lookup failed');
-            }
-
-            const cert = parseCertData(data, domain);
-            cachedCert = cert;
-            renderTLS(cert);
-            return cert;
-
-        } catch (err) {
-            console.error('[TLS Inspector]', err);
-            cachedCert = null;
-            tlsBody.innerHTML = `
-                <div class="intel-group">
-                    <div class="intel-row">
-                        <span class="intel-key">Status</span>
-                        <span class="intel-val danger">⚠ ${err.message}</span>
-                    </div>
-                    <div class="intel-row" style="margin-top:8px;">
-                        <span class="intel-key" style="font-size:0.66rem;color:var(--text-dim)">Note: SSL Labs may be rate-limited or the domain may not support HTTPS.</span>
-                    </div>
-                </div>`;
-            return null;
-        }
-    }
-
-    function parseCertData(data, domain) {
-        const endpoint = data.endpoints?.[0] || {};
-        const grade = endpoint.grade || 'N/A';
-        const details = endpoint.details || {};
-        const certData = details.cert || {};
-        const protocol = details.protocols?.[details.protocols.length - 1] || {};
-
-        const notBefore = certData.notBefore ? new Date(certData.notBefore) : null;
-        const notAfter = certData.notAfter ? new Date(certData.notAfter) : null;
-        const now = new Date();
-        const daysLeft = notAfter ? Math.ceil((notAfter - now) / (1000 * 60 * 60 * 24)) : null;
-
-        let status = 'secure';
-        if (daysLeft !== null && daysLeft < 0) status = 'error';
-        else if (daysLeft !== null && daysLeft < 30) status = 'warning';
-        else if (grade && !['A', 'A+', 'B'].includes(grade)) status = 'warning';
-        if (grade && ['F', 'T', 'M'].includes(grade)) status = 'error';
-
-        return {
-            domain,
-            issuer: certData.issuerSubject || certData.issuerLabel || 'Unknown',
-            validFrom: notBefore ? notBefore.toLocaleDateString() : 'Unknown',
-            expiration: notAfter ? notAfter.toLocaleDateString() : 'Unknown',
-            daysLeft,
-            protocol: protocol.name ? `${protocol.name} ${protocol.version}` : 'Unknown',
-            grade,
-            status,
-            sans: certData.altNames || [],
-            subject: certData.commonNames?.[0] || domain
-        };
-    }
-
-    function renderTLS(cert) {
-        const tlsBody = document.getElementById('tls-body');
-        const gradeClass = ['A', 'A+'].includes(cert.grade) ? 'grade-a' :
-                           cert.grade === 'B' ? 'grade-b' :
-                           cert.grade === 'C' ? 'grade-c' : 'grade-low';
-
-        const statusLabel = cert.status === 'secure' ? '✓ SECURE' :
-                            cert.status === 'warning' ? '⚠ WARNING' : '✕ INSECURE';
-
-        const expiryNote = cert.daysLeft !== null && cert.daysLeft < 30 && cert.daysLeft >= 0
-            ? `<div class="intel-row"><span class="intel-key">⚠ Expiry Warning</span><span class="intel-val danger">Expires in ${cert.daysLeft} days</span></div>`
-            : cert.daysLeft !== null && cert.daysLeft < 0
-            ? `<div class="intel-row"><span class="intel-key">✕ EXPIRED</span><span class="intel-val danger">Expired ${Math.abs(cert.daysLeft)} days ago</span></div>`
-            : '';
-
-        const sansHTML = cert.sans.length > 0
-            ? `<div class="intel-row" style="flex-direction:column;align-items:flex-start;gap:4px;">
-                <span class="intel-key">SANs (${cert.sans.length})</span>
-                <div class="tls-san-list">${cert.sans.slice(0, 10).map(s => `<div class="tls-san-item">› ${s}</div>`).join('')}${cert.sans.length > 10 ? `<div class="tls-san-item" style="color:var(--text-dim)">…and ${cert.sans.length - 10} more</div>` : ''}</div>
-               </div>` : '';
-
-        tlsBody.innerHTML = `
-            <div class="intel-group" style="animation-delay:0s">
-                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-                    <span class="tls-badge ${cert.status}">${statusLabel}</span>
-                    <span class="tls-grade ${gradeClass}">${cert.grade}</span>
-                </div>
-                <div class="intel-row"><span class="intel-key">Subject</span><span class="intel-val highlight">${cert.subject}</span></div>
-                <div class="intel-row"><span class="intel-key">Issuer</span><span class="intel-val">${cert.issuer}</span></div>
-                <div class="intel-row"><span class="intel-key">Valid From</span><span class="intel-val">${cert.validFrom}</span></div>
-                <div class="intel-row"><span class="intel-key">Expires</span><span class="intel-val">${cert.expiration}</span></div>
-                ${expiryNote}
-                <div class="intel-row"><span class="intel-key">Protocol</span><span class="intel-val">${cert.protocol}</span></div>
-                ${sansHTML}
-            </div>`;
-    }
-
-    function getCachedCert() { return cachedCert; }
-    function clear() {
-        cachedCert = null;
-        const s = document.getElementById('tls-section');
-        if (s) s.style.display = 'none';
-    }
-
-    return { isDomain, fetchCertificate, getCachedCert, clear };
-})();
 
 
 // ─────────── AI Investigation Assistant ───────────
@@ -192,7 +51,7 @@ const AIInvestigator = (() => {
         return { type: 'isp', provider: isp };
     }
 
-    function generateAnalysis(data, risk, tlsCert, breachResults) {
+    function generateAnalysis(data, risk, tlsCert, osint, forensic) {
         const infra = classifyInfrastructure(data.isp, data.org, data.hosting, data.mobile);
         const parts = [];
 
@@ -223,7 +82,7 @@ const AIInvestigator = (() => {
             parts.push(`No significant threat indicators were detected.`);
         }
 
-        // TLS analysis
+        // TLS analysis (if available)
         if (tlsCert) {
             parts.push(`\n🔒 **TLS Security:**`);
             if (tlsCert.status === 'secure') {
@@ -239,26 +98,41 @@ const AIInvestigator = (() => {
             }
         }
 
-        // Breach Intelligence analysis
-        if (breachResults) {
-            parts.push(`\n🕵️ **Dark Web Breach Intelligence:**`);
-            if (breachResults.breachCount === 0) {
-                parts.push(`No known data breaches were found for **${breachResults.domain}**. This is a positive indicator.`);
+        // ── Shodan InternetDB insights ──
+        if (osint && osint.shodan) {
+            const s = osint.shodan;
+            parts.push(`\n🔍 **Shodan InternetDB:**`);
+            const ports = s.ports || [];
+            const vulns = s.vulns || [];
+            if (ports.length > 0) {
+                parts.push(`Open ports detected: **${ports.join(', ')}** (${ports.length} total).`);
             } else {
-                const totalRec = breachResults.totalExposedRecords >= 1000000
-                    ? (breachResults.totalExposedRecords / 1000000).toFixed(1) + 'M'
-                    : breachResults.totalExposedRecords >= 1000
-                    ? (breachResults.totalExposedRecords / 1000).toFixed(1) + 'K'
-                    : breachResults.totalExposedRecords;
-                parts.push(`🚨 **${breachResults.breachCount} breach(es)** detected affecting **${totalRec} records**. Overall severity: **${breachResults.overallSeverity.toUpperCase()}**.`);
-                const topBreach = breachResults.breaches[0];
-                if (topBreach) {
-                    parts.push(`Most recent: **${topBreach.name}** (${topBreach.date}) — ${topBreach.description}`);
-                    parts.push(`Data exposed: ${topBreach.dataExposed.slice(0, 5).join(', ')}.`);
-                }
-                if (breachResults.breaches.some(b => b.dataExposed.some(d => d.toLowerCase().includes('password')))) {
-                    parts.push(`⚠️ **Passwords were exposed** in one or more breaches. Credential reuse is a significant risk.`);
-                }
+                parts.push(`No open ports found — the host may be well-firewalled.`);
+            }
+            if (vulns.length > 0) {
+                parts.push(`🚨 **${vulns.length} known vulnerability(ies)** found: ${vulns.slice(0, 5).join(', ')}${vulns.length > 5 ? '…' : ''}.`);
+            }
+        }
+
+        // ── DNS Record insights ──
+        if (forensic && forensic.dns && forensic.dns.records) {
+            const recs = forensic.dns.records;
+            const typeCount = Object.keys(recs).length;
+            const totalRecs = Object.values(recs).reduce((s, a) => s + a.length, 0);
+            parts.push(`\n🧬 **DNS Analysis:**`);
+            parts.push(`Found **${totalRecs}** DNS record(s) across **${typeCount}** type(s).`);
+            if (recs.MX) {
+                parts.push(`Mail servers: ${recs.MX.map(r => r.data).join(', ')}.`);
+            }
+            if (recs.NS) {
+                parts.push(`Nameservers: ${recs.NS.map(r => r.data).join(', ')}.`);
+            }
+            if (recs.TXT) {
+                const spf = recs.TXT.find(r => r.data.includes('spf'));
+                const dmarc = recs.TXT.find(r => r.data.includes('dmarc'));
+                if (spf) parts.push(`✓ SPF record detected (email spoofing protection).`);
+                if (dmarc) parts.push(`✓ DMARC record detected (email authentication).`);
+                if (!spf && !dmarc) parts.push(`⚠️ No SPF/DMARC records — email spoofing risk.`);
             }
         }
 
@@ -308,8 +182,8 @@ const AIInvestigator = (() => {
         if (t) t.remove();
     }
 
-    async function onInvestigationComplete(data, risk, tlsCert, breachResults) {
-        investigationContext = { data, risk, tlsCert, breachResults };
+    async function onInvestigationComplete(data, risk, tlsCert, osintResults, forensicResults) {
+        investigationContext = { data, risk, tlsCert, osintResults, forensicResults };
         
         // Expand AI panel if collapsed
         const panel = document.getElementById('ai-panel');
@@ -325,7 +199,7 @@ const AIInvestigator = (() => {
         await new Promise(r => setTimeout(r, 1200));
         hideTyping();
 
-        const analysis = generateAnalysis(data, risk, tlsCert, breachResults);
+        const analysis = generateAnalysis(data, risk, tlsCert, osintResults, forensicResults);
         addMessage('assistant', analysis);
     }
 
@@ -349,7 +223,7 @@ const AIInvestigator = (() => {
             return 'No investigation data available yet. Please run an investigation first by entering an IP or domain in the search bar.';
         }
 
-        const { data, risk, tlsCert, breachResults } = ctx;
+        const { data, risk, tlsCert, osintResults, forensicResults } = ctx;
 
         if (q.includes('ip') || q.includes('address')) {
             return `The target IP is **${data.query}**, located in **${data.city}, ${data.country}** (${data.regionName}). Coordinates: ${data.lat}, ${data.lon}.`;
@@ -367,8 +241,7 @@ const AIInvestigator = (() => {
             return data.proxy ? '🛡️ Yes, this IP is flagged as a **proxy/VPN** exit node. Traffic origin may be masked.' : 'No proxy or VPN indicators were detected for this IP.';
         }
         if (q.includes('tls') || q.includes('ssl') || q.includes('cert') || q.includes('https')) {
-            if (!tlsCert) return 'No TLS certificate data available. TLS inspection is only performed for domain lookups.';
-            return `🔒 TLS Grade: **${tlsCert.grade}** | Issuer: **${tlsCert.issuer}** | Expires: **${tlsCert.expiration}** | Protocol: **${tlsCert.protocol}** | Status: **${tlsCert.status}**.`;
+            return 'TLS certificate inspection is not available in this version. It requires a backend proxy service to work.';
         }
         if (q.includes('location') || q.includes('where') || q.includes('country') || q.includes('city')) {
             return `📍 The target is geolocated to **${data.city}, ${data.regionName}, ${data.country}**. Timezone: ${data.timezone}.`;
@@ -377,20 +250,61 @@ const AIInvestigator = (() => {
             const infra = classifyInfrastructure(data.isp, data.org, data.hosting, data.mobile);
             return `Infrastructure type: **${infra.type}** (Provider: **${infra.provider}**). ${data.hosting ? 'This is confirmed as a hosting/data center IP.' : 'This does not appear to be a hosting IP.'}`;
         }
-        if (q.includes('breach') || q.includes('dark web') || q.includes('leak') || q.includes('pwned') || q.includes('exposed') || q.includes('hack')) {
-            if (!breachResults) return 'No breach intelligence data available for this investigation.';
-            if (breachResults.breachCount === 0) return `✅ No known data breaches were found for **${breachResults.domain}**. The domain appears clean in our breach databases.`;
-            const topBreaches = breachResults.breaches.slice(0, 3).map(b => `**${b.name}** (${b.records >= 1000000 ? (b.records/1000000).toFixed(1)+'M' : (b.records/1000).toFixed(0)+'K'} records, ${b.severity})`).join(', ');
-            return `🚨 **${breachResults.breachCount} breach(es)** found for **${breachResults.domain}**. Top breaches: ${topBreaches}. Overall severity: **${breachResults.overallSeverity.toUpperCase()}**.`;
+
+        // ── NEW: OSINT-related queries ──
+        if (q.includes('port') || q.includes('shodan') || q.includes('open port')) {
+            const s = osintResults?.shodan;
+            if (!s) return 'No Shodan data available for this target.';
+            const ports = s.ports || [];
+            const vulns = s.vulns || [];
+            return `🔍 **Shodan InternetDB:** ${ports.length} open port(s): **${ports.join(', ') || 'None'}**. ${vulns.length > 0 ? `🚨 ${vulns.length} CVE(s) found: ${vulns.slice(0, 5).join(', ')}.` : 'No known vulnerabilities.'}`;
         }
-        if (q.includes('summary') || q.includes('report') || q.includes('analyze') || q.includes('full')) {
-            return generateAnalysis(data, risk, tlsCert, breachResults);
+        if (q.includes('vuln') || q.includes('cve')) {
+            const s = osintResults?.shodan;
+            if (!s) return 'No vulnerability data available. Shodan InternetDB data was not fetched.';
+            const vulns = s.vulns || [];
+            return vulns.length > 0 
+                ? `🚨 **${vulns.length} vulnerability(ies)** found: ${vulns.join(', ')}.`
+                : '✓ No known vulnerabilities detected by Shodan InternetDB.';
         }
-        if (q.includes('help')) {
-            return 'You can ask me about: **IP address**, **ISP/owner**, **risk/threat level**, **VPN/proxy**, **TLS/SSL certificate**, **data breaches**, **location**, **cloud/hosting**, or request a full **summary**.';
+        if (q.includes('whois') || q.includes('registr') || q.includes('rdap') || q.includes('owner')) {
+            const w = osintResults?.whois;
+            if (!w) return 'No WHOIS/RDAP data available for this target.';
+            if (w.type === 'domain') {
+                return `📋 **WHOIS:** Domain **${w.name}** | Registrar: **${w.registrar}** | Created: ${w.created} | Expires: ${w.expires}.`;
+            }
+            return `📋 **WHOIS:** Network **${w.name}** | Org: **${w.organization}** | Range: ${w.netRange}.`;
         }
 
-        return `I can help with investigation queries. Try asking about the **IP**, **ISP**, **risk level**, **TLS certificate**, **location**, or **infrastructure type**. Type "help" for a list of topics.`;
+
+        // ── Forensic module queries ──
+        if (q.includes('dns') || q.includes('record') || q.includes('mx') || q.includes('nameserver')) {
+            const d = forensicResults?.dns;
+            if (!d || !d.records) return 'No DNS data available. DNS analysis only runs for domain lookups.';
+            const types = Object.keys(d.records);
+            const total = Object.values(d.records).reduce((s, a) => s + a.length, 0);
+            let resp = `🧬 **DNS Records:** ${total} record(s) across ${types.length} type(s): **${types.join(', ')}**.`;
+            if (d.records.MX) resp += `\nMail: ${d.records.MX.map(r => r.data).join(', ')}.`;
+            if (d.records.NS) resp += `\nNameservers: ${d.records.NS.map(r => r.data).join(', ')}.`;
+            return resp;
+        }
+        if (q.includes('header') || q.includes('security header') || q.includes('hsts') || q.includes('csp')) {
+            return 'HTTP header inspection is not available in this version. It requires a backend proxy service to work.';
+        }
+        if (q.includes('timeline') || q.includes('event') || q.includes('log')) {
+            const events = InvestigationTimeline.getEvents();
+            if (events.length === 0) return 'No timeline events recorded yet.';
+            return `📊 **Timeline:** ${events.length} event(s) recorded. Latest: **[${events[events.length-1].source}]** ${events[events.length-1].description}`;
+        }
+
+        if (q.includes('summary') || q.includes('analyze') || q.includes('full')) {
+            return generateAnalysis(data, risk, tlsCert, osintResults, forensicResults);
+        }
+        if (q.includes('help')) {
+            return 'You can ask me about: **IP address**, **ISP/owner**, **risk/threat level**, **VPN/proxy**, **location**, **cloud/hosting**, **ports/Shodan**, **vulnerabilities/CVEs**, **WHOIS/registrar**, **DNS records**, **timeline**, or request a full **summary**.';
+        }
+
+        return `I can help with investigation queries. Try asking about the **IP**, **ISP**, **risk level**, **location**, **ports**, **vulnerabilities**, **WHOIS**, or **DNS records**. Type "help" for a full list.`;
     }
 
     function clear() {

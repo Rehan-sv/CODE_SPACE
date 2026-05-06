@@ -1,0 +1,50 @@
+name: 🚀 Feature Request
+description: Suggest a new feature or enhancement for CompassInt
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have an idea to make CompassInt better? We'd love to hear it!
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / Motivation
+      description: What problem does this feature solve? What are you currently unable to do?
+      placeholder: "I'm always frustrated when..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe the feature or change you'd like to see.
+      placeholder: "I'd like CompassInt to..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Any alternative approaches or workarounds you've considered.
+    validations:
+      required: false
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Feature Category
+      options:
+        - New OSINT Module
+        - UI / UX Improvement
+        - Export / Reporting
+        - Map / Visualisation
+        - Performance
+        - Documentation
+        - Other
+    validations:
+      required: true

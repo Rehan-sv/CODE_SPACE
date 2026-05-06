@@ -1,0 +1,12 @@
+{
+  "name": "compassint",
+  "version": "1.0.0",
+  "description": "CompassInt — OSINT Investigation Dashboard",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^30.0.0"
+  }
+}

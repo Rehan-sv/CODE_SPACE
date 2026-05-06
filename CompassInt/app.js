@@ -1,6 +1,7 @@
 /* ╔══════════════════════════════════════════════════════════════╗
-   ║  SENTINEL ROUTE — Application Engine                        ║
+   ║  COMPASSINT — Application Engine                           ║
    ║  IP Geolocation · Traceroute Sim · Risk Analysis · Export   ║
+   ║  OSINT: Shodan · WHOIS · DNS · Investigation Timeline       ║
    ╚══════════════════════════════════════════════════════════════╝ */
 
 (() => {
@@ -26,7 +27,7 @@
     const btnClear      = $('#btn-clear');
     const loadingOverlay = $('#loading-overlay');
 
-    // AI & TLS DOM refs
+    // AI DOM refs
     const aiPanel      = $('#ai-panel');
     const aiToggleBtn  = $('#ai-toggle-btn');
     const aiCollapseBtn= $('#ai-collapse-btn');
@@ -39,6 +40,8 @@
     let currentData = null;
     let originCoords = null;
     let mapLayers = [];  // track all added layers for cleanup
+    let osintResults = null;  // stores results from OSINT modules
+    let forensicResults = null;  // stores results from forensic modules
 
     // High-risk country codes (known for bulletproof hosting, cybercrime origins)
     const HIGH_RISK_COUNTRIES = [
@@ -409,11 +412,13 @@
     async function investigate(query) {
         setStatus('RESOLVING…', 'active');
         toast('Initiating investigation…', 'info');
+        InvestigationTimeline.addEvent('system', `Investigation started for: ${query}`, 'info');
 
         try {
             const target = await resolveInput(query);
 
             setStatus('FETCHING INTEL…', 'active');
+            InvestigationTimeline.addEvent('geoip', `Fetching geolocation data for ${target}…`, 'info');
 
             const res = await fetch(`http://ip-api.com/json/${encodeURIComponent(target)}?fields=status,message,country,countryCode,region,regionName,city,zip,lat,lon,timezone,isp,org,as,asname,query,mobile,proxy,hosting`);
             if (!res.ok) throw new Error(`API Error: ${res.status}`);
@@ -425,6 +430,9 @@
 
             // Risk assessment
             const risk = assessRisk(data);
+            InvestigationTimeline.addEvent('geoip', 
+                `Target located: ${data.city}, ${data.country} (${data.query}) — Threat: ${risk.level}`,
+                risk.score > 50 ? 'warning' : 'success');
 
             // Ensure we have origin
             if (!originCoords) await getOriginLocation();
@@ -469,27 +477,60 @@
             setStatus('LIVE', 'active');
             toast('Investigation complete', 'success');
 
-            // ── TLS Certificate Inspection (domains only) ──
-            let tlsCert = null;
-            if (TLSInspector.isDomain(query)) {
-                setStatus('TLS SCAN…', 'active');
-                tlsCert = await TLSInspector.fetchCertificate(query);
-                setStatus('LIVE', 'active');
-            }
+            // ══════════════════════════════════════════════
+            //  OSINT MODULE LOOKUPS
+            //  We run modules in parallel using Promise.allSettled.
+            //  This means if one fails, the others still complete.
+            // ══════════════════════════════════════════════
+            setStatus('OSINT SCAN…', 'active');
+            const isDomain = /^(?!:\/\/)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/.test(query.trim()) && !/^(\d{1,3}\.){3}\d{1,3}$/.test(query.trim());
 
-            // ── Dark Web Breach Intelligence ──
-            let breachResults = null;
-            setStatus('BREACH SCAN…', 'active');
-            breachResults = await BreachIntel.scan(query);
+            const osintPromises = await Promise.allSettled([
+                // 1. Shodan InternetDB — always runs (IP only, free)
+                ShodanLookup.lookup(data.query),
+
+                // 2. WHOIS/RDAP — works for both IPs and domains (free)
+                WhoisLookup.lookup(isDomain ? query : data.query, isDomain)
+            ]);
+
+            // Collect results into a single object for AI & exports
+            osintResults = {
+                shodan:    osintPromises[0].status === 'fulfilled' ? osintPromises[0].value : null,
+                whois:     osintPromises[1].status === 'fulfilled' ? osintPromises[1].value : null
+            };
+
             setStatus('LIVE', 'active');
 
-            // ── AI Investigator auto-analysis ──
-            await AIInvestigator.onInvestigationComplete(data, risk, tlsCert, breachResults);
+            // ══════════════════════════════════════════════
+            //  FORENSIC MODULE LOOKUPS (DNS records)
+            //  DNS records for domain targets.
+            // ══════════════════════════════════════════════
+            if (isDomain) {
+                setStatus('FORENSICS…', 'active');
+                InvestigationTimeline.addEvent('system', 'Running forensic analysis modules…', 'info');
+
+                const forensicPromises = await Promise.allSettled([
+                    DNSAnalyzer.analyze(query)
+                ]);
+
+                forensicResults = {
+                    dns: forensicPromises[0].status === 'fulfilled' ? forensicPromises[0].value : null
+                };
+            } else {
+                forensicResults = { dns: null };
+            }
+
+            setStatus('LIVE', 'active');
+            InvestigationTimeline.addEvent('system', 'Investigation complete — all modules finished.', 'success');
+
+            // ── AI Investigator auto-analysis (now includes OSINT + forensic data) ──
+            await AIInvestigator.onInvestigationComplete(data, risk, null, osintResults, forensicResults);
 
         } catch (err) {
             setStatus('ERROR', 'error');
             toast(err.message || 'Investigation failed', 'error');
-            console.error('[Sentinel Route]', err);
+            InvestigationTimeline.addEvent('system', `Investigation failed: ${err.message}`, 'error');
+            console.error('[CompassInt]', err);
         }
     }
 
@@ -498,7 +539,7 @@
         if (!currentData) return;
         const risk = assessRisk(currentData);
         const report = {
-            tool: 'Sentinel Route',
+            tool: 'CompassInt',
             timestamp: new Date().toISOString(),
             target: {
                 ip: currentData.query,
@@ -528,10 +569,21 @@
                 lon: originCoords.lon,
                 city: originCoords.city
             } : null,
-            distance_km: originCoords ? Math.round(haversineDistance(originCoords.lat, originCoords.lon, currentData.lat, currentData.lon)) : null
+            distance_km: originCoords ? Math.round(haversineDistance(originCoords.lat, originCoords.lon, currentData.lat, currentData.lon)) : null,
+            // ── OSINT Data ──
+            osint: {
+                shodan: ShodanLookup.getCachedData(),
+                whois: WhoisLookup.getCachedData()
+            },
+            // ── Forensic Data ──
+            forensics: {
+                dns: DNSAnalyzer.getCachedData()
+            },
+            // ── Investigation Timeline ──
+            timeline: InvestigationTimeline.getEvents()
         };
 
-        downloadBlob(JSON.stringify(report, null, 2), `sentinel_report_${currentData.query}.json`, 'application/json');
+        downloadBlob(JSON.stringify(report, null, 2), `compass_report_${currentData.query}.json`, 'application/json');
         toast('JSON report exported', 'success');
     }
 
@@ -541,7 +593,7 @@
         const dist = originCoords ? Math.round(haversineDistance(originCoords.lat, originCoords.lon, currentData.lat, currentData.lon)) : '—';
         const lines = [
             '═══════════════════════════════════════════════════',
-            '  SENTINEL ROUTE — FORENSIC REPORT',
+            '  COMPASSINT — FORENSIC REPORT',
             '═══════════════════════════════════════════════════',
             `  Generated: ${new Date().toISOString()}`,
             '',
@@ -570,13 +622,61 @@
             '',
             '── DISTANCE ──',
             `  Distance      : ${dist} km`,
+        ];
+
+        // ── Append OSINT data to the TXT report ──
+        const shodan = ShodanLookup.getCachedData();
+        if (shodan) {
+            lines.push('', '── SHODAN INTERNETDB ──');
+            lines.push(`  Open Ports    : ${(shodan.ports || []).join(', ') || 'None'}`);
+            lines.push(`  Vulns (CVEs)  : ${(shodan.vulns || []).join(', ') || 'None'}`);
+            lines.push(`  Hostnames     : ${(shodan.hostnames || []).join(', ') || '—'}`);
+        }
+        const whois = WhoisLookup.getCachedData();
+        if (whois) {
+            lines.push('', '── WHOIS / RDAP ──');
+            if (whois.type === 'domain') {
+                lines.push(`  Domain        : ${whois.name}`);
+                lines.push(`  Registrar     : ${whois.registrar}`);
+                lines.push(`  Created       : ${whois.created}`);
+                lines.push(`  Expires       : ${whois.expires}`);
+            } else {
+                lines.push(`  Network       : ${whois.name}`);
+                lines.push(`  Organization  : ${whois.organization}`);
+                lines.push(`  Range         : ${whois.netRange}`);
+            }
+        }
+
+        // ── Append DNS data ──
+        const dns = DNSAnalyzer.getCachedData();
+        if (dns && dns.records) {
+            lines.push('', '── DNS RECORDS ──');
+            Object.keys(dns.records).forEach(type => {
+                const recs = dns.records[type];
+                if (recs && recs.length > 0) {
+                    lines.push(`  ${type}:`);
+                    recs.forEach(r => lines.push(`    → ${r.data} (TTL: ${r.ttl}s)`));
+                }
+            });
+        }
+
+        // ── Append Timeline ──
+        const timeline = InvestigationTimeline.getEvents();
+        if (timeline.length > 0) {
+            lines.push('', '── INVESTIGATION TIMELINE ──');
+            timeline.forEach(e => {
+                lines.push(`  [${e.timestamp}] [${e.source}] ${e.description}`);
+            });
+        }
+
+        lines.push(
             '',
             '═══════════════════════════════════════════════════',
             '  END OF REPORT',
             '═══════════════════════════════════════════════════'
-        ];
+        );
 
-        downloadBlob(lines.join('\n'), `sentinel_report_${currentData.query}.txt`, 'text/plain');
+        downloadBlob(lines.join('\n'), `compass_report_${currentData.query}.txt`, 'text/plain');
         toast('TXT report exported', 'success');
     }
 
@@ -595,6 +695,7 @@
     // ─────────── Clear / Reset ───────────
     function clearInvestigation() {
         currentData = null;
+        osintResults = null;
         clearMapLayers();
         map.flyTo([20, 0], 3, { duration: 1.5 });
 
@@ -625,10 +726,15 @@
         setStatus('STANDBY', 'idle');
         toast('Investigation cleared', 'info');
 
-        // Clear TLS, Breach & AI modules
-        TLSInspector.clear();
-        BreachIntel.clear();
+        // Clear AI and OSINT modules
         AIInvestigator.clear();
+        ShodanLookup.clear();
+        WhoisLookup.clear();
+
+        // Clear forensic modules
+        DNSAnalyzer.clear();
+        InvestigationTimeline.clear();
+        forensicResults = null;
     }
 
     // ─────────── Event Bindings ───────────
@@ -646,6 +752,7 @@
 
     btnExportJSON.addEventListener('click', exportJSON);
     btnExportTXT.addEventListener('click', exportTXT);
+
     btnClear.addEventListener('click', clearInvestigation);
 
     // ── AI Panel Events ──
