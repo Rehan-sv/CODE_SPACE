@@ -15,7 +15,7 @@ class Student {
 public class aray_list {
 
     public static void main(String[] args) {
-        // Student Student =new Student();
+
 
         ArrayList<Student> list =
                 new ArrayList<>();
