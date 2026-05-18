@@ -4,6 +4,7 @@
 <form onsubmit="return validateForm()">
 
 <fieldset>
+    
 <legend>Personal Information</legend>
 
 Name:
@@ -20,7 +21,9 @@ Gender:
 
 </fieldset>
 
+
 <br>
+
 
 <fieldset>
 <legend>Contact Information</legend>
@@ -54,48 +57,69 @@ Email:
 <input type="submit" value="Register">
 
 </form>
+
 <script>
+
 function validateForm(){
 
 var name=document.getElementById("name").value;
+
 var coun=document.getElementById("country").value.toLowerCase();
+
 var email=document.getElementById("email").value;
+
 var mob=document.getElementById("mobile").value;
+
 var dob=document.getElementById("dob").value;
+
 
 var mobpattern=/^[0-9]{10}$/;
 var namepattern=/^[A-Za-z ]$/;
 
+
 if(coun=="india" || coun=="china"){
 alert("Registration Fee: $19");
+
 }
+
 else{
 alert("Registration Fee: $20");
 }
 
+
 if(!mobpattern.test(mob)){
+
 alert("Enter the mobile number correctly!");
 return false;
+
 }
 
 if(!namepattern.test(name)){
+
 alert("Enter the name correctly!");
+
 return false;
+
 }
 
 var birthYear=new Date(dob).getFullYear;
+
 var currentYear=new Date().getFullYear();
 
 if(currentYear-birthYear < 18){
+
 alert("Age must be 18+");
+
 return false;
+
 }
 
 alert("Form submitted successfully!");
+
 return true;
 
 }
 </script>
-</body>
 
+</body>
 </html>
