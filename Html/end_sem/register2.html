@@ -1,0 +1,239 @@
+<html>
+
+<head>
+
+<title>ACM Registration</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#41707e;
+}
+
+form{
+width:350px;
+margin:auto;
+background:white;
+padding:20px;
+border-radius:5px;
+}
+
+input{
+width:100%;
+padding:6px;
+margin:5px 0;
+}
+
+span{
+color:red;
+font-size:12px;
+}
+
+.valid{
+border:2px solid green;
+}
+
+.invalid{
+border:2px solid red;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>ACM Member Registration</h1>
+
+<form onsubmit="return validateForm()">
+
+Name:
+
+<input type="text"
+id="name"
+onmouseout="document.getElementById('name').style.border='2px solid red'">
+
+<span id="nameerror"></span>
+
+<br><br>
+
+DOB:
+
+<input type="date" id="dob">
+
+<span id="doberror"></span>
+
+<br><br>
+
+Gender:
+
+<select id="gender">
+
+<option>Male</option>
+<option>Female</option>
+
+</select>
+
+<br><br>
+
+Country:
+
+<select id="country">
+
+<option>India</option>
+<option>China</option>
+<option>USA</option>
+<option>Canada</option>
+<option>UK</option>
+
+</select>
+
+<br><br>
+
+Mobile Number:
+
+<input type="text" id="number">
+
+<span id="numbererror"></span>
+
+<br><br>
+
+Email:
+
+<input type="text" id="email">
+
+<span id="emailerror"></span>
+
+<br><br>
+
+Degree:
+
+<br>
+
+<input type="checkbox"> BE
+<input type="checkbox"> BTech
+<input type="checkbox"> ME
+<input type="checkbox"> MTech
+<input type="checkbox"> MSc
+<input type="checkbox"> Ph.D
+
+<br><br>
+
+<button type="submit">Submit</button>
+
+<button type="reset">Reset</button>
+
+<button type="button"
+onclick="window.location.href='index.html'">
+
+Back
+
+</button>
+
+</form>
+
+<script>
+
+function validateForm(){
+
+    let name=document.getElementById("name").value;
+
+    let dob=document.getElementById("dob").value;
+
+    let country=document.getElementById("country").value;
+
+    let number=document.getElementById("number").value;
+
+    let email=document.getElementById("email").value;
+
+    let npattern=/^[0-9]{10}$/;
+
+    let epattern=/^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+
+    // NAME VALIDATION
+
+    if(!/^[A-Za-z ]+$/.test(name)){
+
+        document.getElementById("nameerror").innerHTML=
+        "Only alphabets allowed";
+
+        return false;
+    }
+
+    else{
+        document.getElementById("nameerror").innerHTML="";
+    }
+
+    // MOBILE VALIDATION
+
+    if(!npattern.test(number)){
+
+        document.getElementById("numbererror").innerHTML=
+        "Enter valid 10 digit number";
+
+        return false;
+    }
+
+    else{
+        document.getElementById("numbererror").innerHTML="";
+    }
+
+    // EMAIL VALIDATION
+
+    if(!epattern.test(email)){
+
+        document.getElementById("emailerror").innerHTML=
+        "Invalid Email";
+
+        return false;
+    }
+
+    else{
+        document.getElementById("emailerror").innerHTML="";
+    }
+
+    // AGE VALIDATION USING DOB
+
+    let birth=new Date(dob).getFullYear();
+
+    let today=new Date().getFullYear();
+
+    let age=today-birth;
+
+    if(age<18){
+
+        document.getElementById("doberror").innerHTML=
+        "Age must be above 18";
+
+        return false;
+    }
+
+    else{
+        document.getElementById("doberror").innerHTML="";
+    }
+
+    // COUNTRY REGISTRATION FEE
+
+    if(country=="India" || country=="China"){
+
+        alert("Registration fee is $19");
+
+    }
+
+    else{
+
+        alert("Registration fee is $20");
+
+    }
+
+    alert("Registration Successful");
+
+    return true;
+}
+
+</script>
+
+</body>
+
+</html>

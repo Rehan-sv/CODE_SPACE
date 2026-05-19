@@ -1,0 +1,139 @@
+<html>
+
+<head>
+
+<title>Shopping Cart</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f4f4;
+}
+
+form{
+width:350px;
+margin:auto;
+background:rgb(46, 40, 40);
+padding:20px;
+border-radius:5px;
+}
+
+input{
+width:100%;
+padding:6px;
+margin:5px 0;
+}
+
+span{
+color:red;
+font-size:12px;
+}
+
+.valid{
+border:2px solid green;
+}
+
+.invalid{
+border:2px solid red;
+}body{
+font-family:Arial;
+background:#f4f4f4;
+}
+
+form{
+width:350px;
+margin:auto;
+background:white;
+padding:20px;
+border-radius:5px;
+}
+
+input{
+width:100%;
+padding:6px;
+margin:5px 0;
+}
+
+span{
+color:red;
+font-size:12px;
+}
+
+
+</style>
+
+</head>
+
+<body>
+
+
+
+<h1>Shopping Cart</h1>
+
+
+<h3>Laptop - ₹50000</h3>
+
+<button onclick="addItem('Laptop',50000)">
+
+Add to Cart
+
+</button>
+
+
+<h3>Mobile - ₹20000</h3>
+
+<button onclick="addItem('Mobile',20000)">
+
+Add to Cart
+
+</button>
+
+
+<h3>Headphone - ₹3000</h3>
+
+<button onclick="addItem('Headphone',3000)">
+
+Add to Cart
+
+</button>
+
+
+
+<h3>Keyboard - ₹1500</h3>
+
+<button onclick="addItem('Keyboard',1500)">
+
+Add to Cart
+
+</button>
+
+
+<h2>Cart Items</h2>
+
+<ul id="cartitems">
+
+</ul>
+
+<h3>Total Amount : ₹<span id="total">0</span></h3>
+
+
+<script>
+
+let total=0;
+
+function addItem(name,price){
+
+    document.getElementById("cartitems").innerHTML +=
+    name  +  price;
+
+    total = total + price;
+
+    document.getElementById("total").innerHTML = total;
+}
+
+</script>
+
+</body>
+
+</html>
