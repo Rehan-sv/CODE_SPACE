@@ -1,0 +1,306 @@
+<html>
+
+<head>
+
+<title>Donor Registration</title>
+
+<style>
+body{
+font-family:Arial;
+background:#5f62a4;
+}
+
+form{
+width:350px;
+margin:auto;
+background:white;
+padding:20px;
+border-radius:5px;
+}
+
+input{
+width:100%;
+padding:6px;
+margin:5px 0;
+}
+
+span{
+color:red;
+font-size:12px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Blood Donation Form</h1>
+
+<form onsubmit="return validateForm()">
+
+Name:
+
+<input type="text"
+id="name"
+onblur="this.style.border='2px solid red'">
+
+<span id="nameerror"></span>
+
+<br><br>
+
+Age:
+
+<input type="number"
+id="age">
+
+<span id="ageerror"></span>
+
+<br><br>
+
+Gender:
+
+<select id="gender">
+
+<option>Male</option>
+<option>Female</option>
+
+</select>
+
+<br><br>
+
+Blood Group:
+
+<select>
+
+<option>A+</option>
+<option>A-</option>
+<option>B+</option>
+<option>B-</option>
+<option>AB+</option>
+<option>AB-</option>
+<option>O+</option>
+<option>O-</option>
+
+</select>
+
+<br><br>
+
+Last Donation Date:
+
+<input type="date" id="date">
+
+<span id="dateerror"></span>
+
+<br><br>
+
+Weight:
+
+<input type="number" id="weight">
+
+<span id="weighterror"></span>
+
+<br><br>
+
+Sleep Hours:
+
+<input type="number" id="sleep">
+
+<span id="sleeperror"></span>
+
+<br><br>
+
+Mobile Number:
+
+<input type="text" id="number">
+
+<span id="numbererror"></span>
+
+<br><br>
+
+Email:
+
+<input type="text" id="email">
+
+<span id="emailerror"></span>
+
+<br><br>
+
+<input type="checkbox" required>
+No chronic illness
+
+<br><br>
+
+<input type="checkbox" required>
+No medication restrictions
+
+<br><br>
+
+<button type="submit">Submit</button>
+
+<button type="reset">Reset</button>
+
+<button  value="click here" 
+onclick="window.location.href='index1.html'">
+Back
+</button>
+
+</form>
+
+<script>
+
+function validateForm(){
+
+    let name=document.getElementById("name").value;
+
+    let age=document.getElementById("age").value;
+
+    let gender=document.getElementById("gender").value;
+
+    let date=document.getElementById("date").value;
+
+    let weight=document.getElementById("weight").value;
+
+    let sleep=document.getElementById("sleep").value;
+
+    let number=document.getElementById("number").value;
+
+    let email=document.getElementById("email").value;
+
+
+    if(name==""|| age==""|| weight==""|| number==""){
+        alert("Enter all the details")
+        return false;
+    }
+    
+
+    let epattern=/^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+
+    let npattern=/^[0-9]{10}$/;
+
+    // NAME VALIDATION
+
+    if(!/^[A-Za-z ]+$/.test(name)){
+
+        document.getElementById("nameerror").innerHTML=
+        "Only alphabets allowed";
+
+        return false;
+    }
+
+    else{
+        document.getElementById("nameerror").innerHTML="";
+    }
+
+    // AGE VALIDATION
+
+    if(age<18){
+
+        document.getElementById("ageerror").innerHTML=
+        "Age must be above 18";
+
+        return false;
+    }
+
+    else{
+        document.getElementById("ageerror").innerHTML="";
+    }
+
+    // WEIGHT VALIDATION
+
+    if(weight<55){
+
+        document.getElementById("weighterror").innerHTML=
+        "Weight must be above 55kg";
+
+        return false;
+    }
+
+    else{
+        document.getElementById("weighterror").innerHTML="";
+    }
+
+    // SLEEP VALIDATION
+
+    if(sleep<8){
+
+        document.getElementById("sleeperror").innerHTML=
+        "Minimum 8 hours sleep required";
+
+        return false;
+    }
+
+    else{
+        document.getElementById("sleeperror").innerHTML="";
+    }
+
+    // MOBILE VALIDATION
+
+    if(!npattern.test(number)){
+
+        document.getElementById("numbererror").innerHTML=
+        "Enter valid 10 digit number";
+
+        return false;
+    }
+
+    else{
+        document.getElementById("numbererror").innerHTML="";
+    }
+
+    // EMAIL VALIDATION
+
+    if(!epattern.test(email)){
+
+        document.getElementById("emailerror").innerHTML=
+        "Invalid email";
+
+        return false;
+    }
+
+    else{
+        document.getElementById("emailerror").innerHTML="";
+    }
+
+    // DATE VALIDATION
+
+    let today=new Date();
+
+    let donationdate=new Date(date);
+
+    let days=(today-donationdate)/(1000*60*60*24);
+
+    if(gender=="Male" && days<90){
+
+        alert("Male donor must wait 90 days");
+
+        document.getElementById("dateerror").innerHTML=
+        "Not eligible now";
+
+        return false;
+    }
+
+    else if(gender=="Female" && days<120){
+
+        alert("Female donor must wait 120 days");
+
+        document.getElementById("dateerror").innerHTML=
+        "Not eligible now";
+
+        return false;
+    }
+
+    else{
+        document.getElementById("dateerror").innerHTML="";
+    }
+
+    alert("Registration Successful");
+
+    return true;
+}
+
+</script>
+
+</body>
+
+</html>
