@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<title>Event Registration</title>
+
+<style>
+
+body{
+font-family: Arial, Helvetica, sans-serif;
+background-color: rgb(141, 147, 199);
+
+}
+
+form{
+
+padding:20px;
+background-color: aqua;
+text-align: center;
+width: 350px;
+margin: auto;
+border: 3px solid black;
+
+
+}
+
+input,textarea{
+width:100%;
+padding:8px;
+margin: 6px,0;
+
+}
+
+input:focus,textarea:focus,select:focus{
+background:lightyellow;
+}
+
+button{
+padding:10px;
+background:rgb(40, 173, 46);
+color:white;
+border:none;
+border-radius:5px;
+}
+
+button:hover{
+background:rgb(103, 103, 105);
+}
+
+span{
+color:red;
+font-size:12px;
+}
+
+</style>
+
+</head>
+
+<body>
+<nav style="background-color: rgb(30, 29, 29); color: greenyellow;">
+<h1 align="center" >Tech Conference 2025</h1>
+</nav>
+
+<form onsubmit="return validateForm()">
+
+<label>Name</label>
+
+<input type="text" id="name">
+
+<span id="nameError"></span>
+
+<label>Email</label>
+
+<input type="text"
+id="email"
+onblur="checkEmail()">
+
+<span id="emailError"></span>
+
+<label>Phone</label>
+
+<input type="text" id="phone">
+
+<span id="phoneError"></span>
+
+<label>Event Type</label><br>
+
+<input type="radio"
+name="event"
+value="Workshop"
+onchange="showEvent()">Workshop
+
+<input type="radio"
+name="event"
+value="Seminar"
+onchange="showEvent()">Seminar
+
+<input type="radio"
+name="event"
+value="Panel"
+onchange="showEvent()">Panel
+
+<p id="eventMsg"></p>
+
+<label>Interests</label><br>
+
+<input type="checkbox"
+name="interest">AI
+
+<input type="checkbox"
+name="interest">Blockchain
+
+<input type="checkbox"
+name="interest">IoT
+
+<br>
+
+<span id="checkError"></span>
+
+<br><br>
+
+<label>Country</label>
+
+<select>
+
+<option>India</option>
+
+<option>USA</option>
+
+<option>UK</option>
+
+</select>
+
+<label>Comments</label>
+
+<textarea></textarea>
+
+<button type="submit">Submit</button>
+
+<button type="reset">Reset</button>
+
+<button type="button" id="href" onclick="window.location.href='register2.html'">Back</button>
+
+<h3 id="timer"></h3>
+
+</form>
+
+<script>
+
+var time=60;
+
+setInterval(function(){
+
+document.getElementById("timer").innerHTML=
+"Early Bird Ends In : "+time+" sec";
+
+time--;
+
+},1000)
+
+function checkEmail()
+{
+    var email=document.getElementById("email").value;
+
+    var pattern=/^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+
+    if(!email.match(pattern))
+    {
+        document.getElementById("emailError").innerHTML=
+        "Invalid Email";
+    }
+    else
+    {
+        document.getElementById("emailError").innerHTML="";
+    }
+}
+
+function showEvent()
+{
+    var event=document.querySelector(
+    'input[name="event"]:checked').value;
+
+    document.getElementById("eventMsg").innerHTML=
+    "Selected Event : "+event;
+}
+
+function validateForm()
+{
+    var name=document.getElementById("name").value;
+
+    var phone=document.getElementById("phone").value;
+
+    var namePattern=/^[A-Za-z ]+$/;
+
+    var phonePattern=/^[0-9]{10}$/;
+
+    if(!name.match(namePattern))
+    {
+        document.getElementById("nameError").innerHTML=
+        "Only letters allowed";
+
+        return false;
+    }
+
+    if(!phone.match(phonePattern))
+    {
+        document.getElementById("phoneError").innerHTML=
+        "Enter 10 digits";
+
+        return false;
+    }
+
+    var checks=document.getElementsByName("interest");
+
+    var selected=false;
+
+    for(i=0;i<checks.length;i++)
+    {
+        if(checks[i].checked)
+        {
+            selected=true;
+        }
+    }
+
+    if(selected==false)
+    {
+        document.getElementById("checkError").innerHTML=
+        "Select atleast one interest";
+
+        return false;
+    }
+
+    alert("Registration Successful");
+
+    return true;
+}
+
+</script>
+
+</body>
+
+</html>
