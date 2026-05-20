@@ -9,25 +9,24 @@
 body{
 font-family:Arial;
 background:#f4f4f4;
+text-align: center;}
+table{
+    display: flex;
+justify-content: center
 }
 
-form{
-width:350px;
-margin:auto;
-background:rgb(46, 40, 40);
+
+td{
 padding:20px;
-border-radius:5px;
+border:1px solid black;
+background:white;
 }
 
-input{
-width:100%;
-padding:6px;
-margin:5px 0;
-}
+button{
 
-span{
-color:red;
-font-size:12px;
+background:green;
+color:white;
+padding: 10px;
 }
 
 </style>
@@ -36,65 +35,83 @@ font-size:12px;
 
 <body>
 
-
-
 <h1>Shopping Cart</h1>
 
+<table>
 
-<h3>Laptop - ₹50000</h3>
+<tr>
+
+<td>
+
+<h3>Laptop</h3>
+
+<p>₹50000</p>
 
 <button onclick="addItem('Laptop',50000)">
-
 Add to Cart
-
 </button>
 
+</td>
 
-<h3>Mobile - ₹20000</h3>
+<td>
+    
+
+<h3>Mobile</h3>
+
+<p>₹20000</p>
 
 <button onclick="addItem('Mobile',20000)">
-
 Add to Cart
-
 </button>
 
+</td>
 
-<h3>Headphone - ₹3000</h3>
+</tr>
+
+<tr>
+
+<td>
+
+<h3>Headphone</h3>
+
+<p>₹3000</p>
 
 <button onclick="addItem('Headphone',3000)">
-
 Add to Cart
-
 </button>
 
+</td>
 
+<td>
 
-<h3>Keyboard - ₹1500</h3>
+<h3>Keyboard</h3>
+
+<p>₹1500</p>
 
 <button onclick="addItem('Keyboard',1500)">
-
 Add to Cart
-
 </button>
 
+</td>
+
+</tr>
+
+</table>
 
 <h2>Cart Items</h2>
 
-<ul id="cartitems">
+<div id="cartitems"></div>
 
-</ul>
-
-<h3>Total Amount : ₹<span id="total">0</span></h3>
-
+<h2>Total Amount : ₹<span id="total">0</span></h2>
 
 <script>
 
 let total=0;
 
-function addItem(name,price){
-
+function addItem(name,price)
+{
     document.getElementById("cartitems").innerHTML +=
-    name  +  price;
+    "<p>"+name+" -> ₹"+price+"</p>";
 
     total = total + price;
 
