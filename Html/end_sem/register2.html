@@ -12,12 +12,11 @@ background:#41707e;
 }
 
 form{
-/* width:350px;
-margin:auto; */
-display flex-direction justify-content:  ;
+width:350px;
+margin:auto;
 background:white;
 padding:20px;
-border-radius:5px;
+border: 3px solid black;
 }
 
 input{
@@ -25,19 +24,17 @@ width:100%;
 padding:6px;
 margin:5px 0;
 }
-
+input:focus{
+    background-color: antiquewhite;
+}
+button:hover{
+    background-color: rgb(57, 53, 53);
+}
 span{
 color:red;
 font-size:12px;
 }
 
-.valid{
-border:2px solid green;
-}
-
-.invalid{
-border:2px solid red;
-}
 
 </style>
 
@@ -45,15 +42,14 @@ border:2px solid red;
 
 <body>
 
-<h1>ACM Member Registration</h1>
+<h1 style="background-color:black;color: beige; text-align: center;">ACM Member Registration</h1>
 
 <form onsubmit="return validateForm()">
 
 Name:
 
 <input type="text"
-id="name"
-onmouseout="document.getElementById('name').style.border='2px solid red'">
+id="name">
 
 <span id="nameerror"></span>
 
@@ -126,7 +122,7 @@ Degree:
 <button type="reset">Reset</button>
 
 <button type="button"
-onclick="window.location.href='index.html'">
+onclick="window.location.href='index1.html'">
 
 Back
 
