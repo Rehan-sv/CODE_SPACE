@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/user/OneDrive/Documents/VS CODE/C++",
-      "program": "c:/Users/user/OneDrive/Documents/VS CODE/C++/build/Debug/outDebug",
+      "cwd": "c:/Users/user/OneDrive/Documents/VS CODE/C++/lab_2",
+      "program": "c:/Users/user/OneDrive/Documents/VS CODE/C++/lab_2/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
