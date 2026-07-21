@@ -20,7 +20,7 @@ int main()
 
         int count=0;
 
-        for(int i=0;i<N;i++)
+        for(int i=0; i<N; i++)
         {
             int available;
 
@@ -32,7 +32,6 @@ int main()
             if(B[i]<=available)
                 count++;
         }
-
         printf("%d\n",count);
     }
 
