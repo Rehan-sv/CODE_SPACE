@@ -2,10 +2,9 @@ class Node:
     def __init__(self, data):
         self.data = data
         self.next = None
-
-
+        
 class SinglyLinkedList:
-    
+
     def __init__(self):
         self.head = None
 
@@ -54,6 +53,10 @@ class SinglyLinkedList:
 
     # Print List
     def print_list(self):
+        if self.head is None:
+            print("List is Empty")
+            return
+
         temp = self.head
 
         print("List:", end=" ")
@@ -66,18 +69,41 @@ class SinglyLinkedList:
 
 
 # Driver Code
+
 sll = SinglyLinkedList()
 
-sll.insert_first(20)
-sll.insert_first(10)
+while True:
 
-sll.insert_last(30)
-sll.insert_last(40)
+    print("\n----- MENU -----")
+    print("1. Insert at First")
+    print("2. Insert at Last")
+    print("3. Delete First")
+    print("4. Delete Last")
+    print("5. Display List")
+    print("6. Exit")
 
-sll.print_list()
+    choice = int(input("Enter your choice: "))
 
-sll.delete_first()
-sll.print_list()
+    if choice == 1:
+        data = int(input("Enter value: "))
+        sll.insert_first(data)
 
-sll.delete_last()
-sll.print_list()
+    elif choice == 2:
+        data = int(input("Enter value: "))
+        sll.insert_last(data)
+
+    elif choice == 3:
+        sll.delete_first()
+
+    elif choice == 4:
+        sll.delete_last()
+
+    elif choice == 5:
+        sll.print_list()
+
+    elif choice == 6:
+        print("Program Ended")
+        break
+
+    else:
+        print("Invalid Choice")
