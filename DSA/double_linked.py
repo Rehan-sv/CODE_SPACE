@@ -19,7 +19,7 @@ class DoublyLinkedList:
             new_node.next = self.head
             self.head.prev = new_node
             self.head = new_node
-
+            
     # Insert at Last
     def insert_last(self, data):
         new_node = Node(data)
