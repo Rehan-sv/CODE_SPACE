@@ -1,163 +1,336 @@
 class Node:
-    def __init__(self, parent, data, leftchild=None, rightchild=None):
-        self.parent = parent
+    def __init__(self, data):
         self.data = data
-        self.leftchild = leftchild
-        self.rightchild = rightchild
-
-    def setleft(self, leftchild):
-        self.leftchild = leftchild
-
-    def setright(self, rightchild):
-        self.rightchild = rightchild
-
-    def setdata(self, data):
-        self.data = data
-
-    def getleft(self):
-        return self.leftchild
-
-    def getright(self):
-        return self.rightchild
-
-    def getdata(self):
-        return self.data
-
-    def getparent(self):
-        return self.parent
+        self.left = None
+        self.right = None
+        self.parent = None
 
 
-class BinTree:
+class BinaryTree:
 
     def __init__(self):
         self.root = None
         self.size = 0
 
-    def setroot(self, n):
-        self.root = n
-
-    def getroot(self):
-        return self.root
-
+    # INSERT
     def insert(self, data):
 
-        # Empty tree
+        new_node = Node(data)
+
         if self.root is None:
-            self.root = Node(None, data, None, None)
+            self.root = new_node
             self.size += 1
             return
 
-        prev = None
-        temp = self.root
+        current = self.root
 
-        # Find position
-        while temp is not None:
+        while True:
 
-            prev = temp
+            if data < current.data:
 
-            if temp.getdata() > data:
-                temp = temp.getleft()
+                if current.left is None:
+                    current.left = new_node
+                    new_node.parent = current
+                    break
+
+                current = current.left
+
             else:
-                temp = temp.getright()
 
-        # Insert node
-        if prev.getdata() > data:
-            prev.setleft(Node(prev, data, None, None))
-        else:
-            prev.setright(Node(prev, data, None, None))
+                if current.right is None:
+                    current.right = new_node
+                    new_node.parent = current
+                    break
+
+                current = current.right
 
         self.size += 1
 
-    def deletion(self, key):
+    # SEARCH
+    def search(self, key):
 
-        # Empty tree
-        if self.root is None:
-            print("key not found")
-            return
+        current = self.root
 
-        # Search for key
-        prev = None
-        temp = self.root
+        while current is not None:
 
-        while temp is not None and temp.getdata() != key:
+            if current.data == key:
+                return current
 
-            prev = temp
-
-            if temp.getdata() > key:
-                temp = temp.getleft()
+            if key < current.data:
+                current = current.left
             else:
-                temp = temp.getright()
+                current = current.right
 
-        # Key not found
-        if temp is None:
-            print("key not found")
+        return None
+
+    # DELETE
+    def delete(self, key):
+
+        current = self.search(key)
+
+        if current is None:
+            print("Key not found")
             return
 
-        # Two children
-        if temp.getleft() is not None and temp.getright() is not None:
+        # CASE 1: Node has two children
+        if current.left is not None and current.right is not None:
 
-            succ = temp.getright()
-            sprev = temp
+            successor = current.right
 
-            # Find inorder successor
-            while succ.getleft() is not None:
-                sprev = succ
-                succ = succ.getleft()
+            while successor.left is not None:
+                successor = successor.left
 
-            # Copy successor's data
-            temp.setdata(succ.getdata())
+            current.data = successor.data
+            current = successor
 
-            # Now delete successor
-            temp = succ
-            prev = sprev
-
-        # 0 or 1 child
-        if temp.getleft() is not None:
-            child = temp.getleft()
+        # Find the child
+        if current.left is not None:
+            child = current.left
         else:
-            child = temp.getright()
+            child = current.right
 
         # Deleting root
-        if prev is None:
+        if current.parent is None:
             self.root = child
 
             if child is not None:
                 child.parent = None
 
-        # temp is left child
-        elif prev.getleft() == temp:
-            prev.setleft(child)
+        # Current is left child
+        elif current.parent.left == current:
+            current.parent.left = child
 
             if child is not None:
-                child.parent = prev
+                child.parent = current.parent
 
-        # temp is right child
+        # Current is right child
         else:
-            prev.setright(child)
+            current.parent.right = child
 
             if child is not None:
-                child.parent = prev
+                child.parent = current.parent
 
         self.size -= 1
 
-    def inorder(self, temp):
+    # INORDER
+    def inorder(self, node):
 
-        if temp is None:
+        if node is None:
             return
 
-        self.inorder(temp.getleft())
-
-        print(temp.getdata(), end=" ")
-
-        self.inorder(temp.getright())
+        self.inorder(node.left)
+        print(node.data, end=" ")
+        self.inorder(node.right)
 
 
-# Main
-t = BinTree()
+# MAIN
 
-t.insert(90)
-t.insert(80)
-t.insert(70)
-t.insert(60)
+tree = BinaryTree()
 
-t.inorder(t.getroot())
+tree.insert(90)
+tree.insert(80)
+tree.insert(70)
+tree.insert(60)
+tree.insert(100)
+tree.insert(95)
+tree.insert(110)
+
+print("Inorder:")
+tree.inorder(tree.root)
+
+print("\n")
+
+print("Search 70:")
+if tree.search(70):
+    print("Found")
+else:
+    print("Not found")
+
+print("Deleting 90...")
+tree.delete(90)
+
+print("After deletion:")
+tree.inorder(tree.root)
+
+
+# class Node:
+
+#     def __init__(self, parent, data, left=None, right=None):
+#         self.parent = parent
+#         self.data = data
+#         self.left = left
+#         self.right = right
+
+#     # Setters
+#     def set_left(self, node):
+#         self.left = node
+
+#     def set_right(self, node):
+#         self.right = node
+
+#     def set_data(self, data):
+#         self.data = data
+
+#     # Getters
+#     def get_left(self):
+#         return self.left
+
+#     def get_right(self):
+#         return self.right
+
+#     def get_data(self):
+#         return self.data
+
+#     def get_parent(self):
+#         return self.parent
+
+
+# class BinaryTree:
+
+#     def __init__(self):
+#         self.root = None
+#         self.size = 0
+
+#     def set_root(self, node):
+#         self.root = node
+
+#     def get_root(self):
+#         return self.root
+
+#     # INSERT
+#     def insert(self, data):
+
+#         if self.root is None:
+#             self.root = Node(None, data)
+#             self.size += 1
+#             return
+
+#         current = self.root
+#         parent = None
+
+#         while current is not None:
+
+#             parent = current
+
+#             if data < current.get_data():
+#                 current = current.get_left()
+#             else:
+#                 current = current.get_right()
+
+#         new_node = Node(parent, data)
+
+#         if data < parent.get_data():
+#             parent.set_left(new_node)
+#         else:
+#             parent.set_right(new_node)
+
+#         self.size += 1
+
+#     # SEARCH
+#     def search(self, key):
+
+#         current = self.root
+
+#         while current is not None:
+
+#             if current.get_data() == key:
+#                 return current
+
+#             if key < current.get_data():
+#                 current = current.get_left()
+#             else:
+#                 current = current.get_right()
+
+#         return None
+
+#     # DELETE
+#     def deletion(self, key):
+
+#         current = self.search(key)
+
+#         if current is None:
+#             print("Key not found")
+#             return
+
+#         # Two children
+#         if current.get_left() is not None and current.get_right() is not None:
+
+#             successor = current.get_right()
+
+#             while successor.get_left() is not None:
+#                 successor = successor.get_left()
+
+#             current.set_data(successor.get_data())
+#             current = successor
+
+#         # Find child
+#         if current.get_left() is not None:
+#             child = current.get_left()
+#         else:
+#             child = current.get_right()
+
+#         parent = current.get_parent()
+
+#         # Deleting root
+#         if parent is None:
+
+#             self.root = child
+
+#             if child is not None:
+#                 child.parent = None
+
+#         # Current is left child
+#         elif parent.get_left() == current:
+
+#             parent.set_left(child)
+
+#             if child is not None:
+#                 child.parent = parent
+
+#         # Current is right child
+#         else:
+
+#             parent.set_right(child)
+
+#             if child is not None:
+#                 child.parent = parent
+
+#         self.size -= 1
+
+#     # INORDER
+#     def inorder(self, current):
+
+#         if current is None:
+#             return
+
+#         self.inorder(current.get_left())
+#         print(current.get_data(), end=" ")
+#         self.inorder(current.get_right())
+
+
+# # MAIN
+
+# tree = BinaryTree()
+
+# tree.insert(90)
+# tree.insert(80)
+# tree.insert(70)
+# tree.insert(60)
+# tree.insert(100)
+# tree.insert(95)
+# tree.insert(110)
+
+# print("Inorder:")
+# tree.inorder(tree.get_root())
+
+# print("\nSearch:")
+# if tree.search(70) is not None:
+#     print("Found")
+# else:
+#     print("Not found")
+
+# print("Deleting 90...")
+# tree.deletion(90)
+
+# print("After deletion:")
+# tree.inorder(tree.get_root())
