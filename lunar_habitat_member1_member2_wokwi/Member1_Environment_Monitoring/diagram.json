@@ -1,0 +1,263 @@
+{
+  "version": 1,
+  "author": "OpenAI - Lunar Habitat Project",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "wokwi-arduino-uno",
+      "id": "uno",
+      "top": 40,
+      "left": 20,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-dht22",
+      "id": "dht1",
+      "top": -90,
+      "left": 330,
+      "attrs": {
+        "temperature": "24",
+        "humidity": "45"
+      }
+    },
+    {
+      "type": "wokwi-gas-sensor",
+      "id": "gas1",
+      "top": 60,
+      "left": 355,
+      "attrs": {
+        "ppm": "400",
+        "threshold": "4.4"
+      }
+    },
+    {
+      "type": "wokwi-slide-potentiometer",
+      "id": "pressurePot",
+      "top": 200,
+      "left": 325,
+      "attrs": {
+        "value": "620",
+        "travelLength": "45"
+      }
+    },
+    {
+      "type": "wokwi-slide-potentiometer",
+      "id": "radiationPot",
+      "top": 300,
+      "left": 325,
+      "attrs": {
+        "value": "180",
+        "travelLength": "45"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "ledGood",
+      "top": 30,
+      "left": 560,
+      "attrs": {
+        "color": "green",
+        "label": "NORMAL"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "ledWarn",
+      "top": 100,
+      "left": 560,
+      "attrs": {
+        "color": "yellow",
+        "label": "WARNING"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "ledDanger",
+      "top": 170,
+      "left": 560,
+      "attrs": {
+        "color": "red",
+        "label": "DANGER"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "rGood",
+      "top": 45,
+      "left": 510,
+      "rotate": 90,
+      "attrs": {
+        "value": "220"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "rWarn",
+      "top": 115,
+      "left": 510,
+      "rotate": 90,
+      "attrs": {
+        "value": "220"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "rDanger",
+      "top": 185,
+      "left": 510,
+      "rotate": 90,
+      "attrs": {
+        "value": "220"
+      }
+    },
+    {
+      "type": "wokwi-buzzer",
+      "id": "buzz",
+      "top": 270,
+      "left": 550,
+      "attrs": {
+        "volume": "0.15"
+      }
+    }
+  ],
+  "connections": [
+    [
+      "uno:5V",
+      "dht1:VCC",
+      "red",
+      []
+    ],
+    [
+      "uno:GND.2",
+      "dht1:GND",
+      "black",
+      []
+    ],
+    [
+      "uno:2",
+      "dht1:SDA",
+      "green",
+      []
+    ],
+    [
+      "uno:5V",
+      "gas1:VCC",
+      "red",
+      []
+    ],
+    [
+      "uno:GND.2",
+      "gas1:GND",
+      "black",
+      []
+    ],
+    [
+      "uno:A0",
+      "gas1:AO",
+      "orange",
+      []
+    ],
+    [
+      "uno:5V",
+      "pressurePot:VCC",
+      "red",
+      []
+    ],
+    [
+      "uno:GND.2",
+      "pressurePot:GND",
+      "black",
+      []
+    ],
+    [
+      "uno:A1",
+      "pressurePot:SIG",
+      "blue",
+      []
+    ],
+    [
+      "uno:5V",
+      "radiationPot:VCC",
+      "red",
+      []
+    ],
+    [
+      "uno:GND.2",
+      "radiationPot:GND",
+      "black",
+      []
+    ],
+    [
+      "uno:A2",
+      "radiationPot:SIG",
+      "purple",
+      []
+    ],
+    [
+      "uno:6",
+      "rGood:1",
+      "green",
+      []
+    ],
+    [
+      "rGood:2",
+      "ledGood:A",
+      "green",
+      []
+    ],
+    [
+      "ledGood:C",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "uno:7",
+      "rWarn:1",
+      "yellow",
+      []
+    ],
+    [
+      "rWarn:2",
+      "ledWarn:A",
+      "yellow",
+      []
+    ],
+    [
+      "ledWarn:C",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "uno:8",
+      "rDanger:1",
+      "red",
+      []
+    ],
+    [
+      "rDanger:2",
+      "ledDanger:A",
+      "red",
+      []
+    ],
+    [
+      "ledDanger:C",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "uno:9",
+      "buzz:2",
+      "red",
+      []
+    ],
+    [
+      "buzz:1",
+      "uno:GND.1",
+      "black",
+      []
+    ]
+  ]
+}

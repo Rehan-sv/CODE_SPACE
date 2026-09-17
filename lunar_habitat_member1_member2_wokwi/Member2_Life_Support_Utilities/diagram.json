@@ -1,0 +1,359 @@
+{
+  "version": 1,
+  "author": "OpenAI - Lunar Habitat Project",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "wokwi-arduino-uno",
+      "id": "uno",
+      "top": 60,
+      "left": 20,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-dht22",
+      "id": "dht",
+      "top": -90,
+      "left": 300,
+      "attrs": {
+        "temperature": "25",
+        "humidity": "55"
+      }
+    },
+    {
+      "type": "wokwi-slide-potentiometer",
+      "id": "soil",
+      "top": 70,
+      "left": 320,
+      "attrs": {
+        "value": "650",
+        "travelLength": "45"
+      }
+    },
+    {
+      "type": "wokwi-photoresistor-sensor",
+      "id": "greenLdr",
+      "top": 190,
+      "left": 315,
+      "attrs": {
+        "lux": "350"
+      }
+    },
+    {
+      "type": "wokwi-photoresistor-sensor",
+      "id": "solarLdr",
+      "top": 300,
+      "left": 315,
+      "attrs": {
+        "lux": "900"
+      }
+    },
+    {
+      "type": "wokwi-slide-potentiometer",
+      "id": "oxygen",
+      "top": 410,
+      "left": 320,
+      "attrs": {
+        "value": "800",
+        "travelLength": "45"
+      }
+    },
+    {
+      "type": "wokwi-hc-sr04",
+      "id": "tank",
+      "top": -75,
+      "left": 515,
+      "attrs": {
+        "distance": "35"
+      }
+    },
+    {
+      "type": "wokwi-relay-module",
+      "id": "relay",
+      "top": 95,
+      "left": 535,
+      "attrs": {
+        "transistor": "pnp"
+      }
+    },
+    {
+      "type": "wokwi-servo",
+      "id": "servo",
+      "top": 225,
+      "left": 535,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-led",
+      "id": "growLed",
+      "top": 355,
+      "left": 545,
+      "attrs": {
+        "color": "blue",
+        "label": "GROW LIGHT"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "oxygenLed",
+      "top": 420,
+      "left": 545,
+      "attrs": {
+        "color": "green",
+        "label": "O2 SYSTEM"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "pumpLed",
+      "top": 120,
+      "left": 720,
+      "attrs": {
+        "color": "cyan",
+        "label": "WATER PUMP"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "rGrow",
+      "top": 370,
+      "left": 495,
+      "rotate": 90,
+      "attrs": {
+        "value": "220"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "rO2",
+      "top": 435,
+      "left": 495,
+      "rotate": 90,
+      "attrs": {
+        "value": "220"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "rPump",
+      "top": 135,
+      "left": 675,
+      "rotate": 90,
+      "attrs": {
+        "value": "220"
+      }
+    }
+  ],
+  "connections": [
+    [
+      "uno:5V",
+      "dht:VCC",
+      "red",
+      []
+    ],
+    [
+      "uno:GND.2",
+      "dht:GND",
+      "black",
+      []
+    ],
+    [
+      "uno:2",
+      "dht:SDA",
+      "green",
+      []
+    ],
+    [
+      "uno:5V",
+      "soil:VCC",
+      "red",
+      []
+    ],
+    [
+      "uno:GND.2",
+      "soil:GND",
+      "black",
+      []
+    ],
+    [
+      "uno:A0",
+      "soil:SIG",
+      "orange",
+      []
+    ],
+    [
+      "uno:5V",
+      "greenLdr:VCC",
+      "red",
+      []
+    ],
+    [
+      "uno:GND.2",
+      "greenLdr:GND",
+      "black",
+      []
+    ],
+    [
+      "uno:7",
+      "greenLdr:DO",
+      "green",
+      []
+    ],
+    [
+      "uno:5V",
+      "solarLdr:VCC",
+      "red",
+      []
+    ],
+    [
+      "uno:GND.2",
+      "solarLdr:GND",
+      "black",
+      []
+    ],
+    [
+      "uno:A2",
+      "solarLdr:AO",
+      "yellow",
+      []
+    ],
+    [
+      "uno:5V",
+      "oxygen:VCC",
+      "red",
+      []
+    ],
+    [
+      "uno:GND.2",
+      "oxygen:GND",
+      "black",
+      []
+    ],
+    [
+      "uno:A3",
+      "oxygen:SIG",
+      "purple",
+      []
+    ],
+    [
+      "uno:5V",
+      "tank:VCC",
+      "red",
+      []
+    ],
+    [
+      "uno:GND.2",
+      "tank:GND",
+      "black",
+      []
+    ],
+    [
+      "uno:4",
+      "tank:TRIG",
+      "blue",
+      []
+    ],
+    [
+      "uno:5",
+      "tank:ECHO",
+      "cyan",
+      []
+    ],
+    [
+      "uno:5V",
+      "relay:VCC",
+      "red",
+      []
+    ],
+    [
+      "uno:GND.2",
+      "relay:GND",
+      "black",
+      []
+    ],
+    [
+      "uno:6",
+      "relay:IN",
+      "green",
+      []
+    ],
+    [
+      "uno:5V",
+      "relay:COM",
+      "red",
+      []
+    ],
+    [
+      "relay:NO",
+      "rPump:1",
+      "cyan",
+      []
+    ],
+    [
+      "rPump:2",
+      "pumpLed:A",
+      "cyan",
+      []
+    ],
+    [
+      "pumpLed:C",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "uno:9",
+      "servo:PWM",
+      "orange",
+      []
+    ],
+    [
+      "uno:5V",
+      "servo:V+",
+      "red",
+      []
+    ],
+    [
+      "servo:GND",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "uno:3",
+      "rGrow:1",
+      "blue",
+      []
+    ],
+    [
+      "rGrow:2",
+      "growLed:A",
+      "blue",
+      []
+    ],
+    [
+      "growLed:C",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "uno:8",
+      "rO2:1",
+      "green",
+      []
+    ],
+    [
+      "rO2:2",
+      "oxygenLed:A",
+      "green",
+      []
+    ],
+    [
+      "oxygenLed:C",
+      "uno:GND.1",
+      "black",
+      []
+    ]
+  ]
+}
