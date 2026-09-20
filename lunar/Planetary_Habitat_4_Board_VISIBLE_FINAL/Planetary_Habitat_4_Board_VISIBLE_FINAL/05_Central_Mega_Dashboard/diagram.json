@@ -1,0 +1,241 @@
+{
+  "version": 1,
+  "author": "Planetary Habitat Team",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "wokwi-potentiometer",
+      "id": "p1",
+      "left": 70,
+      "top": 120,
+      "attrs": {
+        "value": "850"
+      }
+    },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "p2",
+      "left": 210,
+      "top": 120,
+      "attrs": {
+        "value": "850"
+      }
+    },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "p3",
+      "left": 350,
+      "top": 120,
+      "attrs": {
+        "value": "850"
+      }
+    },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "p4",
+      "left": 490,
+      "top": 120,
+      "attrs": {
+        "value": "850"
+      }
+    },
+    {
+      "type": "wokwi-arduino-mega",
+      "id": "mega",
+      "left": 700,
+      "top": 160
+    },
+    {
+      "type": "wokwi-lcd2004",
+      "id": "lcd",
+      "left": 950,
+      "top": 160,
+      "attrs": {
+        "pins": "i2c",
+        "i2cAddress": "0x27"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "ok",
+      "left": 930,
+      "top": 400,
+      "attrs": {
+        "color": "green",
+        "label": "HABITAT OK"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "warn",
+      "left": 1010,
+      "top": 400,
+      "attrs": {
+        "color": "yellow",
+        "label": "ATTENTION"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "alarm",
+      "left": 1090,
+      "top": 400,
+      "attrs": {
+        "color": "red",
+        "label": "EMERGENCY"
+      }
+    },
+    {
+      "type": "wokwi-buzzer",
+      "id": "buzzer",
+      "left": 1050,
+      "top": 500
+    }
+  ],
+  "connections": [
+    [
+      "p1:VCC",
+      "mega:5V",
+      "red",
+      []
+    ],
+    [
+      "p1:GND",
+      "mega:GND.1",
+      "black",
+      []
+    ],
+    [
+      "p1:SIG",
+      "mega:A0",
+      "orange",
+      []
+    ],
+    [
+      "p2:VCC",
+      "mega:5V",
+      "red",
+      []
+    ],
+    [
+      "p2:GND",
+      "mega:GND.1",
+      "black",
+      []
+    ],
+    [
+      "p2:SIG",
+      "mega:A1",
+      "orange",
+      []
+    ],
+    [
+      "p3:VCC",
+      "mega:5V",
+      "red",
+      []
+    ],
+    [
+      "p3:GND",
+      "mega:GND.1",
+      "black",
+      []
+    ],
+    [
+      "p3:SIG",
+      "mega:A2",
+      "orange",
+      []
+    ],
+    [
+      "p4:VCC",
+      "mega:5V",
+      "red",
+      []
+    ],
+    [
+      "p4:GND",
+      "mega:GND.1",
+      "black",
+      []
+    ],
+    [
+      "p4:SIG",
+      "mega:A3",
+      "orange",
+      []
+    ],
+    [
+      "lcd:VCC",
+      "mega:5V",
+      "red",
+      []
+    ],
+    [
+      "lcd:GND",
+      "mega:GND.1",
+      "black",
+      []
+    ],
+    [
+      "lcd:SDA",
+      "mega:20",
+      "blue",
+      []
+    ],
+    [
+      "lcd:SCL",
+      "mega:21",
+      "yellow",
+      []
+    ],
+    [
+      "ok:A",
+      "mega:6",
+      "green",
+      []
+    ],
+    [
+      "ok:C",
+      "mega:GND.1",
+      "black",
+      []
+    ],
+    [
+      "warn:A",
+      "mega:7",
+      "yellow",
+      []
+    ],
+    [
+      "warn:C",
+      "mega:GND.1",
+      "black",
+      []
+    ],
+    [
+      "alarm:A",
+      "mega:8",
+      "red",
+      []
+    ],
+    [
+      "alarm:C",
+      "mega:GND.1",
+      "black",
+      []
+    ],
+    [
+      "buzzer:1",
+      "mega:9",
+      "purple",
+      []
+    ],
+    [
+      "buzzer:2",
+      "mega:GND.1",
+      "black",
+      []
+    ]
+  ]
+}

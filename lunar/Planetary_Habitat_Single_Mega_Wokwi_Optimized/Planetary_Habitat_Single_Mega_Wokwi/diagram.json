@@ -1,0 +1,861 @@
+{
+  "version": 1,
+  "author": "Planetary Habitat Project",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "wokwi-arduino-mega",
+      "id": "mega",
+      "top": 330,
+      "left": 620,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-lcd2004",
+      "id": "lcd",
+      "top": 70,
+      "left": 650,
+      "attrs": {
+        "pins": "i2c"
+      }
+    },
+    {
+      "type": "wokwi-dht22",
+      "id": "dht1",
+      "top": 170,
+      "left": 90,
+      "attrs": {
+        "temperature": "24",
+        "humidity": "50"
+      }
+    },
+    {
+      "type": "wokwi-dht22",
+      "id": "dht2",
+      "top": 500,
+      "left": 90,
+      "attrs": {
+        "temperature": "24",
+        "humidity": "55"
+      }
+    },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "envGas",
+      "top": 170,
+      "left": 300,
+      "attrs": {
+        "value": "200"
+      }
+    },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "pressure",
+      "top": 280,
+      "left": 90,
+      "attrs": {
+        "value": "512"
+      }
+    },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "radiation",
+      "top": 280,
+      "left": 300,
+      "attrs": {
+        "value": "100"
+      }
+    },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "soil",
+      "top": 500,
+      "left": 300,
+      "attrs": {
+        "value": "700"
+      }
+    },
+    {
+      "type": "wokwi-photoresistor-sensor",
+      "id": "light",
+      "top": 610,
+      "left": 90,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "water",
+      "top": 610,
+      "left": 300,
+      "attrs": {
+        "value": "700"
+      }
+    },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "oxygen",
+      "top": 720,
+      "left": 90,
+      "attrs": {
+        "value": "700"
+      }
+    },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "solar",
+      "top": 720,
+      "left": 300,
+      "attrs": {
+        "value": "700"
+      }
+    },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "flame",
+      "top": 170,
+      "left": 1070,
+      "attrs": {
+        "value": "0"
+      }
+    },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "safetyGas",
+      "top": 170,
+      "left": 1280,
+      "attrs": {
+        "value": "0"
+      }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "sos",
+      "top": 290,
+      "left": 1170,
+      "attrs": {
+        "color": "red",
+        "label": "SOS"
+      }
+    },
+    {
+      "type": "wokwi-ir-receiver",
+      "id": "ir1",
+      "top": 520,
+      "left": 1040,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-ir-receiver",
+      "id": "ir2",
+      "top": 520,
+      "left": 1160,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-hc-sr04",
+      "id": "waste",
+      "top": 500,
+      "left": 1280,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-hc-sr04",
+      "id": "parking",
+      "top": 620,
+      "left": 1280,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-servo",
+      "id": "servo",
+      "top": 620,
+      "left": 1430,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-photoresistor-sensor",
+      "id": "streetLdr",
+      "top": 680,
+      "left": 1040,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-led",
+      "id": "green",
+      "top": 720,
+      "left": 570,
+      "attrs": {
+        "color": "green"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "yellow",
+      "top": 720,
+      "left": 650,
+      "attrs": {
+        "color": "yellow"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "red",
+      "top": 720,
+      "left": 730,
+      "attrs": {
+        "color": "red"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "fireLed",
+      "top": 360,
+      "left": 1040,
+      "attrs": {
+        "color": "red"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "gasLed",
+      "top": 360,
+      "left": 1140,
+      "attrs": {
+        "color": "yellow"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "sosLed",
+      "top": 360,
+      "left": 1240,
+      "attrs": {
+        "color": "red"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "streetLed",
+      "top": 680,
+      "left": 1160,
+      "attrs": {
+        "color": "white"
+      }
+    },
+    {
+      "type": "wokwi-buzzer",
+      "id": "centralBuzzer",
+      "top": 720,
+      "left": 820,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-buzzer",
+      "id": "safetyBuzzer",
+      "top": 330,
+      "left": 1340,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-led",
+      "id": "pump1",
+      "top": 850,
+      "left": 500,
+      "attrs": {
+        "color": "blue"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "pump2",
+      "top": 850,
+      "left": 600,
+      "attrs": {
+        "color": "blue"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "oxygenFan",
+      "top": 850,
+      "left": 700,
+      "attrs": {
+        "color": "white"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "solarLed",
+      "top": 850,
+      "left": 800,
+      "attrs": {
+        "color": "yellow"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "title",
+      "top": 15,
+      "left": 560,
+      "attrs": {
+        "text": "PLANETARY HABITAT | CENTRAL COMMAND"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "subtitle",
+      "top": 40,
+      "left": 600,
+      "attrs": {
+        "text": "Single-Mega Wokwi Demonstrator | 4 Subsystems Emulated"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "envTitle",
+      "top": 115,
+      "left": 80,
+      "attrs": {
+        "text": "01  ENVIRONMENT MONITORING"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "envSub",
+      "top": 135,
+      "left": 80,
+      "attrs": {
+        "text": "Temperature | Humidity | Air Quality | Pressure | Radiation"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "lifeTitle",
+      "top": 445,
+      "left": 80,
+      "attrs": {
+        "text": "02  LIFE SUPPORT & UTILITIES"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "lifeSub",
+      "top": 465,
+      "left": 80,
+      "attrs": {
+        "text": "Greenhouse | Water | Oxygen | Solar"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "safeTitle",
+      "top": 115,
+      "left": 1040,
+      "attrs": {
+        "text": "03  SAFETY & EMERGENCY"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "safeSub",
+      "top": 135,
+      "left": 1040,
+      "attrs": {
+        "text": "Fire | Gas | SOS | Local Alarm"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "infraTitle",
+      "top": 445,
+      "left": 1040,
+      "attrs": {
+        "text": "04  SMART INFRASTRUCTURE"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "infraSub",
+      "top": 465,
+      "left": 1040,
+      "attrs": {
+        "text": "Traffic | Waste | Parking | Street Lighting"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "coreTitle",
+      "top": 285,
+      "left": 550,
+      "attrs": {
+        "text": "CENTRAL COMMAND / SYSTEM STATUS"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "outputTitle",
+      "top": 790,
+      "left": 500,
+      "attrs": {
+        "text": "CENTRAL ACTUATORS & STATUS"
+      }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "legend",
+      "top": 935,
+      "left": 520,
+      "attrs": {
+        "text": "RED = alarm   YELLOW = warning   GREEN = normal"
+      }
+    }
+  ],
+  "connections": [
+    [
+      "mega:5V",
+      "lcd:VCC",
+      ""
+    ],
+    [
+      "mega:GND.1",
+      "lcd:GND",
+      ""
+    ],
+    [
+      "mega:20",
+      "lcd:SDA",
+      "blue"
+    ],
+    [
+      "mega:21",
+      "lcd:SCL",
+      "blue"
+    ],
+    [
+      "mega:5V",
+      "dht1:VCC",
+      ""
+    ],
+    [
+      "mega:GND.2",
+      "dht1:GND",
+      ""
+    ],
+    [
+      "mega:22",
+      "dht1:SDA",
+      "green"
+    ],
+    [
+      "mega:5V",
+      "dht2:VCC",
+      ""
+    ],
+    [
+      "mega:GND.3",
+      "dht2:GND",
+      ""
+    ],
+    [
+      "mega:23",
+      "dht2:SDA",
+      "green"
+    ],
+    [
+      "mega:5V",
+      "envGas:VCC",
+      ""
+    ],
+    [
+      "mega:GND.4",
+      "envGas:GND",
+      ""
+    ],
+    [
+      "envGas:SIG",
+      "mega:A0",
+      "green"
+    ],
+    [
+      "mega:5V",
+      "pressure:VCC",
+      ""
+    ],
+    [
+      "mega:GND.5",
+      "pressure:GND",
+      ""
+    ],
+    [
+      "pressure:SIG",
+      "mega:A1",
+      "green"
+    ],
+    [
+      "mega:5V",
+      "radiation:VCC",
+      ""
+    ],
+    [
+      "mega:GND.6",
+      "radiation:GND",
+      ""
+    ],
+    [
+      "radiation:SIG",
+      "mega:A2",
+      "green"
+    ],
+    [
+      "mega:5V",
+      "soil:VCC",
+      ""
+    ],
+    [
+      "mega:GND.7",
+      "soil:GND",
+      ""
+    ],
+    [
+      "soil:SIG",
+      "mega:A3",
+      "green"
+    ],
+    [
+      "mega:5V",
+      "light:VCC",
+      ""
+    ],
+    [
+      "mega:GND.8",
+      "light:GND",
+      ""
+    ],
+    [
+      "light:AO",
+      "mega:A4",
+      "green"
+    ],
+    [
+      "mega:5V",
+      "water:VCC",
+      ""
+    ],
+    [
+      "mega:GND.9",
+      "water:GND",
+      ""
+    ],
+    [
+      "water:SIG",
+      "mega:A5",
+      "green"
+    ],
+    [
+      "mega:5V",
+      "oxygen:VCC",
+      ""
+    ],
+    [
+      "mega:GND.10",
+      "oxygen:GND",
+      ""
+    ],
+    [
+      "oxygen:SIG",
+      "mega:A6",
+      "green"
+    ],
+    [
+      "mega:5V",
+      "solar:VCC",
+      ""
+    ],
+    [
+      "mega:GND.11",
+      "solar:GND",
+      ""
+    ],
+    [
+      "solar:SIG",
+      "mega:A7",
+      "green"
+    ],
+    [
+      "mega:5V",
+      "flame:VCC",
+      ""
+    ],
+    [
+      "mega:GND.12",
+      "flame:GND",
+      ""
+    ],
+    [
+      "flame:SIG",
+      "mega:A8",
+      "green"
+    ],
+    [
+      "mega:5V",
+      "safetyGas:VCC",
+      ""
+    ],
+    [
+      "mega:GND.13",
+      "safetyGas:GND",
+      ""
+    ],
+    [
+      "safetyGas:SIG",
+      "mega:A9",
+      "green"
+    ],
+    [
+      "mega:5V",
+      "sos:1.l",
+      ""
+    ],
+    [
+      "mega:GND.14",
+      "sos:1.r",
+      ""
+    ],
+    [
+      "sos:2.l",
+      "mega:24",
+      "orange"
+    ],
+    [
+      "mega:5V",
+      "ir1:VCC",
+      ""
+    ],
+    [
+      "mega:GND.15",
+      "ir1:GND",
+      ""
+    ],
+    [
+      "ir1:OUT",
+      "mega:25",
+      "orange"
+    ],
+    [
+      "mega:5V",
+      "ir2:VCC",
+      ""
+    ],
+    [
+      "mega:GND.16",
+      "ir2:GND",
+      ""
+    ],
+    [
+      "ir2:OUT",
+      "mega:26",
+      "orange"
+    ],
+    [
+      "mega:5V",
+      "waste:VCC",
+      ""
+    ],
+    [
+      "mega:GND.17",
+      "waste:GND",
+      ""
+    ],
+    [
+      "waste:TRIG",
+      "mega:27",
+      "orange"
+    ],
+    [
+      "waste:ECHO",
+      "mega:28",
+      "orange"
+    ],
+    [
+      "mega:5V",
+      "parking:VCC",
+      ""
+    ],
+    [
+      "mega:GND.18",
+      "parking:GND",
+      ""
+    ],
+    [
+      "parking:TRIG",
+      "mega:40",
+      "orange"
+    ],
+    [
+      "parking:ECHO",
+      "mega:41",
+      "orange"
+    ],
+    [
+      "mega:5V",
+      "servo:V+",
+      ""
+    ],
+    [
+      "mega:GND.19",
+      "servo:GND",
+      ""
+    ],
+    [
+      "servo:PWM",
+      "mega:42",
+      "orange"
+    ],
+    [
+      "mega:5V",
+      "streetLdr:VCC",
+      ""
+    ],
+    [
+      "mega:GND.20",
+      "streetLdr:GND",
+      ""
+    ],
+    [
+      "streetLdr:AO",
+      "mega:A10",
+      "green"
+    ],
+    [
+      "mega:GND.21",
+      "green:C",
+      ""
+    ],
+    [
+      "mega:45",
+      "green:A",
+      "red"
+    ],
+    [
+      "mega:GND.22",
+      "yellow:C",
+      ""
+    ],
+    [
+      "mega:46",
+      "yellow:A",
+      "red"
+    ],
+    [
+      "mega:GND.23",
+      "red:C",
+      ""
+    ],
+    [
+      "mega:47",
+      "red:A",
+      "red"
+    ],
+    [
+      "mega:GND.24",
+      "fireLed:C",
+      ""
+    ],
+    [
+      "mega:35",
+      "fireLed:A",
+      "red"
+    ],
+    [
+      "mega:GND.25",
+      "gasLed:C",
+      ""
+    ],
+    [
+      "mega:36",
+      "gasLed:A",
+      "red"
+    ],
+    [
+      "mega:GND.26",
+      "sosLed:C",
+      ""
+    ],
+    [
+      "mega:37",
+      "sosLed:A",
+      "orange"
+    ],
+    [
+      "mega:GND.27",
+      "streetLed:C",
+      ""
+    ],
+    [
+      "mega:43",
+      "streetLed:A",
+      "red"
+    ],
+    [
+      "mega:GND.28",
+      "centralBuzzer:1",
+      ""
+    ],
+    [
+      "centralBuzzer:2",
+      "mega:44",
+      "red"
+    ],
+    [
+      "mega:GND.29",
+      "safetyBuzzer:1",
+      ""
+    ],
+    [
+      "safetyBuzzer:2",
+      "mega:34",
+      "red"
+    ],
+    [
+      "mega:GND.30",
+      "pump1:C",
+      ""
+    ],
+    [
+      "mega:30",
+      "pump1:A",
+      "red"
+    ],
+    [
+      "mega:GND.31",
+      "pump2:C",
+      ""
+    ],
+    [
+      "mega:31",
+      "pump2:A",
+      "red"
+    ],
+    [
+      "mega:GND.32",
+      "oxygenFan:C",
+      ""
+    ],
+    [
+      "mega:32",
+      "oxygenFan:A",
+      "green"
+    ],
+    [
+      "mega:GND.33",
+      "solarLed:C",
+      ""
+    ],
+    [
+      "mega:33",
+      "solarLed:A",
+      "green"
+    ]
+  ],
+  "dependencies": {}
+}

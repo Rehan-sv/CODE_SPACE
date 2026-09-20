@@ -1,0 +1,8 @@
+VISIBLE FINAL VALIDATION
+=========================
+PASS 03B_ESP32_Telegram_Gateway/diagram.json parts=1 connections=0
+PASS 02_Life_Support_Utilities/diagram.json parts=18 connections=48
+PASS 05_Central_Mega_Dashboard/diagram.json parts=10 connections=24
+PASS 04_Smart_Infrastructure/diagram.json parts=14 connections=34
+PASS 03_Safety_Emergency/diagram.json parts=14 connections=33
+PASS 01_Environment_Monitoring/diagram.json parts=14 connections=37

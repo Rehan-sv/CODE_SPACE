@@ -1,0 +1,359 @@
+{
+  "version": 1,
+  "author": "Planetary Habitat Team",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "wokwi-dht22",
+      "id": "dht",
+      "left": 80,
+      "top": 110,
+      "attrs": {
+        "temperature": "24",
+        "humidity": "45"
+      }
+    },
+    {
+      "type": "wokwi-bmp180",
+      "id": "bmp",
+      "left": 250,
+      "top": 110,
+      "attrs": {
+        "temperature": "24",
+        "pressure": "1013"
+      }
+    },
+    {
+      "type": "wokwi-gas-sensor",
+      "id": "gas",
+      "left": 420,
+      "top": 110,
+      "attrs": {
+        "ppm": "400"
+      }
+    },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "rad",
+      "left": 560,
+      "top": 110,
+      "attrs": {
+        "value": "120"
+      }
+    },
+    {
+      "type": "wokwi-arduino-uno",
+      "id": "uno",
+      "left": 690,
+      "top": 130
+    },
+    {
+      "type": "wokwi-relay-module",
+      "id": "vent",
+      "left": 900,
+      "top": 120,
+      "attrs": {
+        "transistor": "npn"
+      }
+    },
+    {
+      "type": "wokwi-relay-module",
+      "id": "scrub",
+      "left": 900,
+      "top": 270,
+      "attrs": {
+        "transistor": "npn"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "ventLoad",
+      "left": 1070,
+      "top": 120,
+      "attrs": {
+        "color": "cyan",
+        "label": "VENT FAN"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "scrubLoad",
+      "left": 1070,
+      "top": 270,
+      "attrs": {
+        "color": "white",
+        "label": "AIR SCRUBBER"
+      }
+    },
+    {
+      "type": "wokwi-lcd2004",
+      "id": "lcd",
+      "left": 1040,
+      "top": 410,
+      "attrs": {
+        "pins": "i2c",
+        "i2cAddress": "0x27"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "ok",
+      "left": 690,
+      "top": 410,
+      "attrs": {
+        "color": "green",
+        "label": "NORMAL"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "warn",
+      "left": 760,
+      "top": 410,
+      "attrs": {
+        "color": "yellow",
+        "label": "WARNING"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "danger",
+      "left": 830,
+      "top": 410,
+      "attrs": {
+        "color": "red",
+        "label": "DANGER"
+      }
+    },
+    {
+      "type": "wokwi-buzzer",
+      "id": "buzzer",
+      "left": 930,
+      "top": 500
+    }
+  ],
+  "connections": [
+    [
+      "dht:VCC",
+      "uno:5V",
+      "red",
+      []
+    ],
+    [
+      "dht:GND",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "dht:SDA",
+      "uno:2",
+      "blue",
+      []
+    ],
+    [
+      "bmp:VCC",
+      "uno:5V",
+      "red",
+      []
+    ],
+    [
+      "bmp:GND",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "bmp:SDA",
+      "uno:A4",
+      "blue",
+      []
+    ],
+    [
+      "bmp:SCL",
+      "uno:A5",
+      "yellow",
+      []
+    ],
+    [
+      "gas:VCC",
+      "uno:5V",
+      "red",
+      []
+    ],
+    [
+      "gas:GND",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "gas:AO",
+      "uno:A0",
+      "orange",
+      []
+    ],
+    [
+      "rad:VCC",
+      "uno:5V",
+      "red",
+      []
+    ],
+    [
+      "rad:GND",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "rad:SIG",
+      "uno:A1",
+      "orange",
+      []
+    ],
+    [
+      "lcd:VCC",
+      "uno:5V",
+      "red",
+      []
+    ],
+    [
+      "lcd:GND",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "lcd:SDA",
+      "uno:A4",
+      "blue",
+      []
+    ],
+    [
+      "lcd:SCL",
+      "uno:A5",
+      "yellow",
+      []
+    ],
+    [
+      "ok:A",
+      "uno:6",
+      "green",
+      []
+    ],
+    [
+      "ok:C",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "warn:A",
+      "uno:7",
+      "yellow",
+      []
+    ],
+    [
+      "warn:C",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "danger:A",
+      "uno:8",
+      "red",
+      []
+    ],
+    [
+      "danger:C",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "buzzer:1",
+      "uno:9",
+      "purple",
+      []
+    ],
+    [
+      "buzzer:2",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "vent:VCC",
+      "uno:5V",
+      "red",
+      []
+    ],
+    [
+      "vent:GND",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "vent:IN",
+      "uno:10",
+      "orange",
+      []
+    ],
+    [
+      "scrub:VCC",
+      "uno:5V",
+      "red",
+      []
+    ],
+    [
+      "scrub:GND",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "scrub:IN",
+      "uno:11",
+      "orange",
+      []
+    ],
+    [
+      "vent:COM",
+      "uno:5V",
+      "red",
+      []
+    ],
+    [
+      "vent:NO",
+      "ventLoad:A",
+      "cyan",
+      []
+    ],
+    [
+      "ventLoad:C",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "scrub:COM",
+      "uno:5V",
+      "red",
+      []
+    ],
+    [
+      "scrub:NO",
+      "scrubLoad:A",
+      "white",
+      []
+    ],
+    [
+      "scrubLoad:C",
+      "uno:GND.1",
+      "black",
+      []
+    ]
+  ]
+}

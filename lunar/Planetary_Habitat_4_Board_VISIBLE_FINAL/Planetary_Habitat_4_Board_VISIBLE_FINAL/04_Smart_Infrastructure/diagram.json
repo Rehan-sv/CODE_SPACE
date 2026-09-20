@@ -1,0 +1,343 @@
+{
+  "version": 1,
+  "author": "Planetary Habitat Team",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "wokwi-pushbutton",
+      "id": "ta",
+      "left": 90,
+      "top": 120,
+      "attrs": {
+        "color": "green",
+        "label": "TRAFFIC A",
+        "bounce": "0"
+      }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "tb",
+      "left": 230,
+      "top": 120,
+      "attrs": {
+        "color": "green",
+        "label": "TRAFFIC B",
+        "bounce": "0"
+      }
+    },
+    {
+      "type": "wokwi-hc-sr04",
+      "id": "waste",
+      "left": 390,
+      "top": 110,
+      "attrs": {
+        "distance": "40"
+      }
+    },
+    {
+      "type": "wokwi-hc-sr04",
+      "id": "parking",
+      "left": 560,
+      "top": 110,
+      "attrs": {
+        "distance": "80"
+      }
+    },
+    {
+      "type": "wokwi-photoresistor-sensor",
+      "id": "ldr",
+      "left": 730,
+      "top": 110,
+      "attrs": {
+        "lux": "700"
+      }
+    },
+    {
+      "type": "wokwi-arduino-uno",
+      "id": "uno",
+      "left": 800,
+      "top": 250
+    },
+    {
+      "type": "wokwi-servo",
+      "id": "servo",
+      "left": 1000,
+      "top": 160,
+      "attrs": {
+        "horn": "single"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "street",
+      "left": 930,
+      "top": 350,
+      "attrs": {
+        "color": "white",
+        "label": "STREET LIGHT"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "park",
+      "left": 1010,
+      "top": 350,
+      "attrs": {
+        "color": "green",
+        "label": "PARKING FREE"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "wasteled",
+      "left": 1090,
+      "top": 350,
+      "attrs": {
+        "color": "red",
+        "label": "WASTE FULL"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "tgreen",
+      "left": 780,
+      "top": 450,
+      "attrs": {
+        "color": "green",
+        "label": "TRAFFIC GO"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "tred",
+      "left": 860,
+      "top": 450,
+      "attrs": {
+        "color": "red",
+        "label": "TRAFFIC STOP"
+      }
+    },
+    {
+      "type": "wokwi-buzzer",
+      "id": "buzzer",
+      "left": 940,
+      "top": 470
+    },
+    {
+      "type": "wokwi-lcd2004",
+      "id": "lcd",
+      "left": 1030,
+      "top": 500,
+      "attrs": {
+        "pins": "i2c",
+        "i2cAddress": "0x27"
+      }
+    }
+  ],
+  "connections": [
+    [
+      "ta:1.r",
+      "uno:2",
+      "green",
+      []
+    ],
+    [
+      "ta:2.r",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "tb:1.r",
+      "uno:3",
+      "green",
+      []
+    ],
+    [
+      "tb:2.r",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "waste:VCC",
+      "uno:5V",
+      "red",
+      []
+    ],
+    [
+      "waste:GND",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "waste:TRIG",
+      "uno:4",
+      "blue",
+      []
+    ],
+    [
+      "waste:ECHO",
+      "uno:5",
+      "yellow",
+      []
+    ],
+    [
+      "parking:VCC",
+      "uno:5V",
+      "red",
+      []
+    ],
+    [
+      "parking:GND",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "parking:TRIG",
+      "uno:6",
+      "blue",
+      []
+    ],
+    [
+      "parking:ECHO",
+      "uno:7",
+      "yellow",
+      []
+    ],
+    [
+      "servo:V+",
+      "uno:5V",
+      "red",
+      []
+    ],
+    [
+      "servo:GND",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "servo:PWM",
+      "uno:8",
+      "orange",
+      []
+    ],
+    [
+      "ldr:VCC",
+      "uno:5V",
+      "red",
+      []
+    ],
+    [
+      "ldr:GND",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "ldr:AO",
+      "uno:A0",
+      "orange",
+      []
+    ],
+    [
+      "lcd:VCC",
+      "uno:5V",
+      "red",
+      []
+    ],
+    [
+      "lcd:GND",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "lcd:SDA",
+      "uno:A4",
+      "blue",
+      []
+    ],
+    [
+      "lcd:SCL",
+      "uno:A5",
+      "yellow",
+      []
+    ],
+    [
+      "street:A",
+      "uno:9",
+      "white",
+      []
+    ],
+    [
+      "street:C",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "park:A",
+      "uno:10",
+      "green",
+      []
+    ],
+    [
+      "park:C",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "wasteled:A",
+      "uno:11",
+      "red",
+      []
+    ],
+    [
+      "wasteled:C",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "tgreen:A",
+      "uno:12",
+      "green",
+      []
+    ],
+    [
+      "tgreen:C",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "tred:A",
+      "uno:13",
+      "red",
+      []
+    ],
+    [
+      "tred:C",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "buzzer:1",
+      "uno:A1",
+      "purple",
+      []
+    ],
+    [
+      "buzzer:2",
+      "uno:GND.1",
+      "black",
+      []
+    ]
+  ]
+}

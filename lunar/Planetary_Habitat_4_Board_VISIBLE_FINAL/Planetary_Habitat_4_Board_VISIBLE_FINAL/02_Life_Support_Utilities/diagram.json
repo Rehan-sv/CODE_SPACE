@@ -1,0 +1,461 @@
+{
+  "version": 1,
+  "author": "Planetary Habitat Team",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "wokwi-dht22",
+      "id": "dht",
+      "left": 70,
+      "top": 110,
+      "attrs": {
+        "temperature": "24",
+        "humidity": "55"
+      }
+    },
+    {
+      "type": "wokwi-photoresistor-sensor",
+      "id": "ldr",
+      "left": 220,
+      "top": 105,
+      "attrs": {
+        "lux": "650"
+      }
+    },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "soil",
+      "left": 360,
+      "top": 105,
+      "attrs": {
+        "value": "700"
+      }
+    },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "water",
+      "left": 480,
+      "top": 105,
+      "attrs": {
+        "value": "800"
+      }
+    },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "o2",
+      "left": 600,
+      "top": 105,
+      "attrs": {
+        "value": "820"
+      }
+    },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "solarV",
+      "left": 720,
+      "top": 105,
+      "attrs": {
+        "value": "760"
+      }
+    },
+    {
+      "type": "wokwi-arduino-uno",
+      "id": "uno",
+      "left": 800,
+      "top": 230
+    },
+    {
+      "type": "wokwi-led",
+      "id": "grow",
+      "left": 1000,
+      "top": 110,
+      "attrs": {
+        "color": "white",
+        "label": "GROW LIGHT"
+      }
+    },
+    {
+      "type": "wokwi-relay-module",
+      "id": "greenPump",
+      "left": 960,
+      "top": 210,
+      "attrs": {
+        "transistor": "npn"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "greenLoad",
+      "left": 1110,
+      "top": 210,
+      "attrs": {
+        "color": "cyan",
+        "label": "GREENHOUSE PUMP"
+      }
+    },
+    {
+      "type": "wokwi-relay-module",
+      "id": "waterPump",
+      "left": 960,
+      "top": 330,
+      "attrs": {
+        "transistor": "npn"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "waterLoad",
+      "left": 1110,
+      "top": 330,
+      "attrs": {
+        "color": "blue",
+        "label": "RECYCLE PUMP"
+      }
+    },
+    {
+      "type": "wokwi-relay-module",
+      "id": "o2Fan",
+      "left": 960,
+      "top": 450,
+      "attrs": {
+        "transistor": "npn"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "o2Load",
+      "left": 1110,
+      "top": 450,
+      "attrs": {
+        "color": "red",
+        "label": "O2 FAN"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "bat",
+      "left": 790,
+      "top": 500,
+      "attrs": {
+        "color": "green",
+        "label": "BATTERY"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "load",
+      "left": 870,
+      "top": 500,
+      "attrs": {
+        "color": "yellow",
+        "label": "LOAD"
+      }
+    },
+    {
+      "type": "wokwi-buzzer",
+      "id": "buzzer",
+      "left": 950,
+      "top": 560
+    },
+    {
+      "type": "wokwi-lcd2004",
+      "id": "lcd",
+      "left": 1040,
+      "top": 590,
+      "attrs": {
+        "pins": "i2c",
+        "i2cAddress": "0x27"
+      }
+    }
+  ],
+  "connections": [
+    [
+      "dht:VCC",
+      "uno:5V",
+      "red",
+      []
+    ],
+    [
+      "dht:GND",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "dht:SDA",
+      "uno:2",
+      "blue",
+      []
+    ],
+    [
+      "ldr:VCC",
+      "uno:5V",
+      "red",
+      []
+    ],
+    [
+      "ldr:GND",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "ldr:DO",
+      "uno:3",
+      "green",
+      []
+    ],
+    [
+      "soil:VCC",
+      "uno:5V",
+      "red",
+      []
+    ],
+    [
+      "soil:GND",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "soil:SIG",
+      "uno:A0",
+      "orange",
+      []
+    ],
+    [
+      "water:VCC",
+      "uno:5V",
+      "red",
+      []
+    ],
+    [
+      "water:GND",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "water:SIG",
+      "uno:A1",
+      "orange",
+      []
+    ],
+    [
+      "o2:VCC",
+      "uno:5V",
+      "red",
+      []
+    ],
+    [
+      "o2:GND",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "o2:SIG",
+      "uno:A2",
+      "orange",
+      []
+    ],
+    [
+      "solarV:VCC",
+      "uno:5V",
+      "red",
+      []
+    ],
+    [
+      "solarV:GND",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "solarV:SIG",
+      "uno:A3",
+      "orange",
+      []
+    ],
+    [
+      "lcd:VCC",
+      "uno:5V",
+      "red",
+      []
+    ],
+    [
+      "lcd:GND",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "lcd:SDA",
+      "uno:A4",
+      "blue",
+      []
+    ],
+    [
+      "lcd:SCL",
+      "uno:A5",
+      "yellow",
+      []
+    ],
+    [
+      "grow:A",
+      "uno:4",
+      "white",
+      []
+    ],
+    [
+      "grow:C",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "greenPump:VCC",
+      "uno:5V",
+      "red",
+      []
+    ],
+    [
+      "greenPump:GND",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "greenPump:IN",
+      "uno:5",
+      "orange",
+      []
+    ],
+    [
+      "greenPump:COM",
+      "uno:5V",
+      "red",
+      []
+    ],
+    [
+      "greenPump:NO",
+      "greenLoad:A",
+      "cyan",
+      []
+    ],
+    [
+      "greenLoad:C",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "waterPump:VCC",
+      "uno:5V",
+      "red",
+      []
+    ],
+    [
+      "waterPump:GND",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "waterPump:IN",
+      "uno:6",
+      "orange",
+      []
+    ],
+    [
+      "waterPump:COM",
+      "uno:5V",
+      "red",
+      []
+    ],
+    [
+      "waterPump:NO",
+      "waterLoad:A",
+      "blue",
+      []
+    ],
+    [
+      "waterLoad:C",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "o2Fan:VCC",
+      "uno:5V",
+      "red",
+      []
+    ],
+    [
+      "o2Fan:GND",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "o2Fan:IN",
+      "uno:7",
+      "orange",
+      []
+    ],
+    [
+      "o2Fan:COM",
+      "uno:5V",
+      "red",
+      []
+    ],
+    [
+      "o2Fan:NO",
+      "o2Load:A",
+      "red",
+      []
+    ],
+    [
+      "o2Load:C",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "bat:A",
+      "uno:8",
+      "green",
+      []
+    ],
+    [
+      "bat:C",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "load:A",
+      "uno:9",
+      "yellow",
+      []
+    ],
+    [
+      "load:C",
+      "uno:GND.1",
+      "black",
+      []
+    ],
+    [
+      "buzzer:1",
+      "uno:10",
+      "purple",
+      []
+    ],
+    [
+      "buzzer:2",
+      "uno:GND.1",
+      "black",
+      []
+    ]
+  ]
+}

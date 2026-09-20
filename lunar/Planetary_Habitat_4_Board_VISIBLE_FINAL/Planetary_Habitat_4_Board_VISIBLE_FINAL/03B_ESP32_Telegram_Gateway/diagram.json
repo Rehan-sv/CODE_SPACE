@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "author": "Planetary Habitat Team",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "board-esp32-devkit-c-v4",
+      "id": "esp",
+      "left": 400,
+      "top": 120
+    }
+  ],
+  "connections": []
+}
