@@ -1,0 +1,4 @@
+[wokwi]
+version = 1
+firmware = "build/Planetary_Habitat_Multi_Dashboard_Fixed_Controls.ino.hex"
+elf = "build/Planetary_Habitat_Multi_Dashboard_Fixed_Controls.ino.elf"

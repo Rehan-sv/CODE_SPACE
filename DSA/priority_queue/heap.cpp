@@ -16,7 +16,7 @@ class MaxHeap
 {
 private:
     static const int MAX_SIZE = 100;
-
+    
     Patient heap[MAX_SIZE];
     int heapSize;
 

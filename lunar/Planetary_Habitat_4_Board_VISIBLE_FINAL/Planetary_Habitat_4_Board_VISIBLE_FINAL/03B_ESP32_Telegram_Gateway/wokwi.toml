@@ -1,3 +1,0 @@
-[wokwi]
-version = 1
-firmware = "build/esp32/firmware.bin"

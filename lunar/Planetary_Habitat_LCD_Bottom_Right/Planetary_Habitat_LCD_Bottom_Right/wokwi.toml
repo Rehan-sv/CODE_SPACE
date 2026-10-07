@@ -1,0 +1,4 @@
+[wokwi]
+version = 1
+firmware = "build/Planetary_Habitat_LCD_Bottom_Right.ino.hex"
+elf = "build/Planetary_Habitat_LCD_Bottom_Right.ino.elf"
