@@ -1,0 +1,128 @@
+// ======================================================
+// APACHE COUCHDB — COMPLETE CRUD DEMONSTRATION
+// Database: couchdb_demo
+// ======================================================
+
+
+// 1. CREATE DATABASE
+// ------------------------------------------------------
+// HTTP METHOD: PUT
+// URL: http://127.0.0.1:5984/couchdb_demo
+//
+// In Fauxton, you can instead use "Create Database"
+// and enter: couchdb_demo
+//
+// Expected: Database created successfully.
+
+
+// 2. INSERT DOCUMENT — CREATE
+// ------------------------------------------------------
+// Open couchdb_demo in Fauxton.
+// Create a new document and insert this JSON.
+
+{
+  "_id": "demo:101",
+  "type": "demo",
+  "title": "Database Demonstration",
+  "student": "Member 1",
+  "remainingMinutes": 30,
+  "status": "open"
+}
+
+
+// 3. READ DOCUMENT
+// ------------------------------------------------------
+// Run this Mango query in Fauxton's Mango Query interface.
+// It finds the document using its unique ID.
+
+{
+  "selector": {
+    "_id": "demo:101"
+  },
+  "limit": 1
+}
+
+
+// 4. UPDATE DOCUMENT
+// ------------------------------------------------------
+// Open the existing document in Fauxton.
+// Keep its current _id and use its actual current _rev.
+// Change remainingMinutes from 30 to 20.
+// Change status from open to in_progress.
+//
+// Replace the revision placeholder below with the
+// actual _rev displayed by CouchDB.
+
+{
+  "_id": "demo:101",
+  "_rev": "PASTE_CURRENT_REVISION_HERE",
+  "type": "demo",
+  "title": "Database Demonstration",
+  "student": "Member 1",
+  "remainingMinutes": 20,
+  "status": "in_progress"
+}
+
+
+// 5. VERIFY THE UPDATE
+// ------------------------------------------------------
+// Execute this Mango query to check the updated values.
+
+{
+  "selector": {
+    "_id": "demo:101"
+  },
+  "fields": [
+    "_id",
+    "_rev",
+    "title",
+    "remainingMinutes",
+    "status"
+  ],
+  "limit": 1
+}
+
+
+// Expected:
+// remainingMinutes = 20
+// status = in_progress
+// _id remains unchanged
+// _rev changes after a successful update
+
+
+// 6. DELETE DOCUMENT
+// ------------------------------------------------------
+// In Fauxton, open demo:101 and select Delete Document.
+//
+// Alternatively, use an HTTP DELETE request:
+// DELETE /couchdb_demo/demo:101?rev=CURRENT_REVISION
+//
+// Replace CURRENT_REVISION with the actual current _rev.
+// CouchDB requires the current revision for this operation.
+
+
+// 7. VERIFY DELETION
+// ------------------------------------------------------
+// Run the same Mango query again.
+// The deleted document should not appear as a normal
+// live document in the query results.
+
+{
+  "selector": {
+    "_id": "demo:101"
+  },
+  "limit": 1
+}
+
+
+// 8. OPTIONAL — DELETE THE ENTIRE DATABASE
+// ------------------------------------------------------
+// HTTP METHOD: DELETE
+// URL: http://127.0.0.1:5984/couchdb_demo
+//
+// Alternatively, delete couchdb_demo through Fauxton.
+//
+// WARNING:
+// This removes the entire demonstration database.
+// Never use this operation on your actual studycompass
+// database during your presentation.

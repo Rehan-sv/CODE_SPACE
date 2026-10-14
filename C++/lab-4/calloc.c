@@ -23,4 +23,4 @@ int main() {
     free(marks);
 
     return 0;
-}
+}   
