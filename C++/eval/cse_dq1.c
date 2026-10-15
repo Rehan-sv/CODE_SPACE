@@ -5,7 +5,7 @@ int sumEven(int n){
         return;
     }
     if(n%2==0){
-        return(n+sumEven(n/10));
+        return(n+sumEven(n-2));
     }
     return sumEven(n-1);
 }
@@ -18,7 +18,7 @@ int count(int n,int *count ){
         return;
     }
     if(n>0){
-        count=count+1;
+        *count=*count+1;
         n=n/10;
     }
     

@@ -11,7 +11,7 @@ int main()
 
     while (s[len] != '\0')
     {
-        len++;
+        len++; 
     }
 
     for (i = 0; i < len / 2; i++)
