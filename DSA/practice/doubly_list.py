@@ -21,27 +21,27 @@ class DoublyLinkedList:
         if not self.head:
             self.head = new_node
             return
-        curr = self.head
-        while curr.next:
-            curr = curr.next
-        curr.next = new_node
-        new_node.prev = curr
+        temp= self.head
+        while temp.next:
+            temp= temp.next
+        temp.next = new_node
+        new_node.prev = temp
 
     def add_at(self, index, data):
         if index == 0:
             self.add_first(data)
             return
         new_node = DNode(data)
-        curr = self.head
+        temp= self.head
         for _ in range(index - 1):
-            if not curr:
+            if not temp:
                 raise IndexError("Index out of bounds")
-            curr = curr.next
-        new_node.next = curr.next
-        new_node.prev = curr
-        if curr.next:
-            curr.next.prev = new_node
-        curr.next = new_node
+            temp= temp.next
+        new_node.next = temp.next
+        new_node.prev = temp
+        if temp.next:
+            temp.next.prev = new_node
+        temp.next = new_node
 
     # --- REMOVE OPERATIONS ---
     def remove_first(self):
@@ -57,10 +57,10 @@ class DoublyLinkedList:
         if not self.head.next:
             self.head = None
             return
-        curr = self.head
-        while curr.next:
-            curr = curr.next
-        curr.prev.next = None
+        temp= self.head
+        while temp.next:
+            temp= temp.next
+        temp.prev.next = None
 
     def remove_at(self, index):
         if not self.head:
@@ -68,20 +68,29 @@ class DoublyLinkedList:
         if index == 0:
             self.remove_first()
             return
-        curr = self.head
+        temp= self.head
         for _ in range(index):
-            if not curr:
+            if not temp:
                 raise IndexError("Index out of bounds")
-            curr = curr.next
-        if curr.next:
-            curr.next.prev = curr.prev
-        if curr.prev:
-            curr.prev.next = curr.next
-
+            temp= temp.next
+        if temp.next:
+            temp.next.prev = temp.prev
+        if temp.prev:
+            temp.prev.next = temp.next
+            
+    def reve(self):
+        temp=self.head
+        
+        while temp is not None:
+            temp.prev,temp.next=temp.next,temp.prev
+            temp=temp.prev 
+        self.head,self.tail=self.tail,self.head
+        
+        
     def display(self):
         nodes = []
-        curr = self.head
-        while curr:
-            nodes.append(str(curr.data))
-            curr = curr.next
+        temp= self.head
+        while temp:
+            nodes.append(str(temp.data))
+            temp= temp.next
         print(" <-> ".join(nodes) + (" <-> None" if nodes else "None"))
