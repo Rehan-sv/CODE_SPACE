@@ -1,3 +1,10 @@
+# Your template completed directly from the pasted function code.
+# Graph operations use Vertex and Edge objects; each Vertex has its current index.
+# DFS/BFS return integer orders, MST methods return (integer edge tuples, total),
+# and Dijkstra returns (dist, integer parent positions), as in your pasted code.
+# No conversion snapshots, extra algorithm lookup dictionaries, slots, repr or str methods.
+
+# -------------------- Vertex --------------------
 
 class Vertex:
 
@@ -9,6 +16,7 @@ class Vertex:
         return self.value
 
 
+# -------------------- Edge --------------------
 
 class Edge:
 
@@ -33,7 +41,7 @@ class Edge:
         return self.value
 
 
-
+# -------------------- DSU --------------------
 
 class DSU:
 
@@ -74,6 +82,8 @@ class DSU:
 
         return item
 
+
+# -------------------- PriorityQueue --------------------
 
 class PriorityQueue:
 
@@ -137,6 +147,57 @@ class PriorityQueue:
         return len(self.heap)
 
 
+# -------------------- MinHeap --------------------
+
+class MinHeap:
+
+    def __init__(self):
+        self.heap = []
+
+    def insert(self, item):
+        self.heap.append(item)
+
+        i = len(self.heap) - 1
+
+        while i > 0:
+            parent = (i - 1) // 2
+
+            if self.heap[i] < self.heap[parent]:
+                self.heap[i], self.heap[parent] = (self.heap[parent], self.heap[i])
+                i = parent
+            else:
+                break
+
+    def remove_min(self):
+        if len(self.heap) == 0:
+            return None
+
+        minimum = self.heap[0]
+        last = self.heap.pop()
+
+        if len(self.heap) > 0:
+            self.heap[0] = last
+            i = 0
+
+            while True:
+                left = 2 * i + 1
+                right = 2 * i + 2
+                smallest = i
+
+                if left < len(self.heap) and self.heap[left] < self.heap[smallest]:
+                    smallest = left
+
+                if right < len(self.heap) and self.heap[right] < self.heap[smallest]:
+                    smallest = right
+
+                if smallest != i:
+                    self.heap[i], self.heap[smallest] = (self.heap[smallest], self.heap[i])
+                    i = smallest
+                else:
+                    break
+
+        return minimum
+
     def is_empty(self):
         return len(self.heap) == 0
 
@@ -150,6 +211,7 @@ class PriorityQueue:
         return len(self.heap)
 
 
+# -------------------- AdjacencyListGraph --------------------
 
 class AdjacencyListGraph:
 
@@ -321,77 +383,80 @@ class AdjacencyListGraph:
 
         return result
 
-
-    def kruskal_mst(self):
+    def prim_mst(self, start=None):
         if self.directed:
             raise ValueError('MST requires an undirected graph')
 
         self.check_weights()
 
-        dsu = DSU(self.n)
-        minheap = MinHeap()
+        if self.n == 0:
+            if start is not None:
+                self.get_index(start)
+
+            return ([], 0)
+
+        if start is None:
+            start = 0
+
+        start = self.get_index(start)
+        vertices = list(self.vertices())
+        visited = [False] * self.n
+        pq = PriorityQueue()
         mst = []
         total = 0
+        pq.insert(0, (None, start, 0))
 
-        for edge in self.edges():
-            u, v = edge.endpoints()
-            u, v = (u.index, v.index)
-            w = edge.element()
-            minheap.insert((w, u, v))
+        while not pq.is_empty():
+            weight, edge = pq.remove_min()
+            parent, v, w = edge
 
-        while not minheap.is_empty() and len(mst) < self.n - 1:
-            w, u, v = minheap.remove_min()
+            if visited[v]:
+                continue
 
-            if dsu.union(u, v):
-                mst.append((u, v, w))
+            visited[v] = True
+
+            if parent is not None:
+                mst.append((parent, v, w))
                 total += w
 
+            for edge in self.outgoing[vertices[v]]:
+                u = edge.opposite(vertices[v]).index
+                edge_weight = edge.element()
+
+                if not visited[u]:
+                    pq.insert(edge_weight, (v, u, edge_weight))
+
         return (mst, total)
 
-    def boruvka_mst(self):
-        if self.directed:
-            raise ValueError('MST requires an undirected graph')
 
-        self.check_weights()
+    def dijkstra(self, source):
+        self.check_weights(nonnegative=True)
 
-        dsu = DSU(self.n)
-        mst = []
-        total = 0
-        components = self.n
+        start = self.get_index(source)
+        vertices = list(self.vertices())
+        dist = [float('inf')] * self.n
+        parent = [None] * self.n
+        dist[start] = 0
+        pq = PriorityQueue()
+        pq.insert(0, start)
 
-        while components > 1:
-            cheapest = [None] * self.n
+        while not pq.is_empty():
+            d, v = pq.remove_min()
 
-            for edge in self.edges():
-                u, v = edge.endpoints()
-                u, v = (u.index, v.index)
+            if d > dist[v]:
+                continue
+
+            for edge in self.outgoing[vertices[v]]:
+                u = edge.opposite(vertices[v]).index
                 w = edge.element()
-                ru = dsu.find(u)
-                rv = dsu.find(v)
+                new_dist = d + w
 
-                if ru != rv:
-                    if cheapest[ru] is None or w < cheapest[ru][2]:
-                        cheapest[ru] = (u, v, w)
+                if new_dist < dist[u]:
+                    dist[u] = new_dist
+                    parent[u] = v
+                    pq.insert(new_dist, u)
 
-                    if cheapest[rv] is None or w < cheapest[rv][2]:
-                        cheapest[rv] = (u, v, w)
-
-            added = False
-
-            for edge in cheapest:
-                if edge is not None:
-                    u, v, w = edge
-
-                    if dsu.union(u, v):
-                        mst.append((u, v, w))
-                        total += w
-                        components -= 1
-                        added = True
-
-            if not added:
-                break
-
-        return (mst, total)
+        return (dist, parent)
 
     def topological_order(self):
         if not self.directed:
