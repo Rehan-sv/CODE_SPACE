@@ -7,7 +7,7 @@ class MaxHeap:
         self.heapsize = 0
 
     # Parent index
-    def parent(self, i):
+    def parent(self, i):    
         return (i - 1) // 2
 
     # Left child index
