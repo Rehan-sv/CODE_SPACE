@@ -1,11 +1,3 @@
-# Your template completed directly from the pasted function code.
-# Graph operations use Vertex and Edge objects; each Vertex has its current index.
-# DFS/BFS return integer orders, MST methods return (integer edge tuples, total),
-# and Dijkstra returns (dist, integer parent positions), as in your pasted code.
-# No conversion snapshots, extra algorithm lookup dictionaries, slots, repr or str methods.
-
-# -------------------- Vertex --------------------
-
 class Vertex:
 
     def __init__(self, element):
@@ -15,8 +7,6 @@ class Vertex:
     def element(self):
         return self.value
 
-
-# -------------------- Edge --------------------
 
 class Edge:
 
@@ -39,9 +29,6 @@ class Edge:
 
     def element(self):
         return self.value
-
-
-# -------------------- DSU --------------------
 
 class DSU:
 
@@ -82,8 +69,6 @@ class DSU:
 
         return item
 
-
-# -------------------- PriorityQueue --------------------
 
 class PriorityQueue:
 
@@ -146,72 +131,6 @@ class PriorityQueue:
     def __len__(self):
         return len(self.heap)
 
-
-# -------------------- MinHeap --------------------
-
-class MinHeap:
-
-    def __init__(self):
-        self.heap = []
-
-    def insert(self, item):
-        self.heap.append(item)
-
-        i = len(self.heap) - 1
-
-        while i > 0:
-            parent = (i - 1) // 2
-
-            if self.heap[i] < self.heap[parent]:
-                self.heap[i], self.heap[parent] = (self.heap[parent], self.heap[i])
-                i = parent
-            else:
-                break
-
-    def remove_min(self):
-        if len(self.heap) == 0:
-            return None
-
-        minimum = self.heap[0]
-        last = self.heap.pop()
-
-        if len(self.heap) > 0:
-            self.heap[0] = last
-            i = 0
-
-            while True:
-                left = 2 * i + 1
-                right = 2 * i + 2
-                smallest = i
-
-                if left < len(self.heap) and self.heap[left] < self.heap[smallest]:
-                    smallest = left
-
-                if right < len(self.heap) and self.heap[right] < self.heap[smallest]:
-                    smallest = right
-
-                if smallest != i:
-                    self.heap[i], self.heap[smallest] = (self.heap[smallest], self.heap[i])
-                    i = smallest
-                else:
-                    break
-
-        return minimum
-
-    def is_empty(self):
-        return len(self.heap) == 0
-
-    def add(self, item):
-        return self.insert(item)
-
-    def min(self):
-        return self.heap[0] if self.heap else None
-
-    def __len__(self):
-        return len(self.heap)
-
-
-# -------------------- AdjacencyListGraph --------------------
 
 class AdjacencyListGraph:
 
