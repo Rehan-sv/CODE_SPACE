@@ -61,10 +61,9 @@ class DSU:
             self.rank[ra] += 1
 
         return True
-
     def make_set(self, item):
-        if not isinstance(item, int) or isinstance(item, bool) or item != len(self.parent):
-            raise ValueError('Use the next unused integer position')
+        if item != len(self.parent):
+            raise ValueError("Use the next unused integer")
 
         self.parent.append(item)
         self.rank.append(0)
