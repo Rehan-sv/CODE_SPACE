@@ -7,6 +7,7 @@ class Vertex:
     def element(self):
         return self.value
 
+
 class Edge:
 
     def __init__(self, u, v, element=None):
@@ -28,6 +29,7 @@ class Edge:
 
     def element(self):
         return self.value
+
 
 class DSU:
 
@@ -67,6 +69,7 @@ class DSU:
         self.rank.append(0)
 
         return item
+
 
 class MinHeap:
 
@@ -129,141 +132,148 @@ class MinHeap:
     def __len__(self):
         return len(self.heap)
 
+
 class EdgeListGraph:
 
-    def __init__(self, directed=False):
+    def __init__(self):
         self.vertex_list = []
         self.edge_list = []
-        self.directed = directed
         self.n = 0
 
-    def is_directed(self):
-        return self.directed
+    # Validate vertex
+    def validate_vertex(self, v):
+        if v not in self.vertex_list:
+            raise ValueError('Invalid vertex')
 
+    # Get vertex    
+    def get_vertex(self, index):
+        return self.vertex_list[index]
+
+    # Vertex count
     def vertex_count(self):
         return len(self.vertex_list)
 
+    # Edge count
     def edge_count(self):
         return len(self.edge_list)
 
+    # Get vertices
     def vertices(self):
         return iter(self.vertex_list)
 
+    # Get edges
     def edges(self):
         return iter(self.edge_list)
 
+    # Get edge
     def get_edge(self, u, v):
         self.validate_vertex(u)
         self.validate_vertex(v)
 
         for edge in self.edge_list:
+
             if edge.origin is u and edge.destination is v:
                 return edge
 
-            if not self.directed and edge.origin is v and (edge.destination is u):
+            if edge.origin is v and edge.destination is u:
                 return edge
 
         return None
 
-    def degree(self, vertex, outgoing=True):
-        return len(self.incident_edges(vertex, outgoing))
-
-    def incident_edges(self, vertex, outgoing=True):
+    # Incident edges
+    def incident_edges(self, vertex):
         self.validate_vertex(vertex)
 
         result = []
 
         for edge in self.edge_list:
-            if self.directed:
-                if outgoing and edge.origin is vertex or (not outgoing and edge.destination is vertex):
-                    result.append(edge)
-            elif edge.origin is vertex or edge.destination is vertex:
+
+            if edge.origin is vertex or edge.destination is vertex:
                 result.append(edge)
 
         return result
+    
+    # Degree
+    def degree(self, vertex):
+        return len(self.incident_edges(vertex))
 
+    # Insert vertex
     def insert_vertex(self, element=None):
         v = Vertex(element)
         v.index = self.n
+
         self.vertex_list.append(v)
         self.n += 1
 
         return v
 
+    # Insert edge
     def insert_edge(self, u, v, element=None):
         self.validate_vertex(u)
         self.validate_vertex(v)
 
         if self.get_edge(u, v) is not None:
-            raise ValueError('Edge already exists between these vertices')
+            raise ValueError('Edge already exists')
 
         edge = Edge(u, v, element)
         self.edge_list.append(edge)
 
         return edge
 
+    # Remove edge
     def remove_edge(self, edge):
         if not isinstance(edge, Edge) or edge not in self.edge_list:
             raise ValueError('Invalid edge')
 
         self.edge_list.remove(edge)
 
+    # Remove vertex
+        
     def remove_vertex(self, vertex):
         self.validate_vertex(vertex)
 
-        self.edge_list = [edge for edge in self.edge_list if edge.origin is not vertex and edge.destination is not vertex]
+        new_edges = []
+
+        for edge in self.edge_list:
+            if edge.origin is not vertex and edge.destination is not vertex:
+                new_edges.append(edge)
+
+        self.edge_list = new_edges
+
         self.vertex_list.remove(vertex)
         self.n -= 1
         vertex.index = -1
 
-        for i, v in enumerate(self.vertices()):
-            v.index = i
-
-    def bfs(self, start):
-        start = self.get_index(start)
-        visited = [False] * self.n
-        queue = [start]
-        front = 0
-        result = []
-        visited[start] = True
-
-        while front < len(queue):
-            v = queue[front]
-            front += 1
-            result.append(v)
-
-            for edge in self.edge_list:
-                if edge.origin.index == v:
-                    u = edge.destination.index
-                elif not self.directed and edge.destination.index == v:
-                    u = edge.origin.index
-                else:
-                    continue
-
-                if not visited[u]:
-                    visited[u] = True
-                    queue.append(u)
-
-        return result
-
+        for i in range(self.n):
+            self.vertex_list[i].index = i   
+        
+    # DFS
     def dfs(self, start):
-        start = self.get_index(start)
+        self.validate_vertex(start)
+
+        start = start.index
+
         visited = [False] * self.n
         stack = [start]
         result = []
 
         while stack:
+
             v = stack.pop()
 
             if not visited[v]:
+
                 visited[v] = True
                 result.append(v)
 
                 for edge in self.edge_list:
+
                     if edge.origin.index == v:
                         u = edge.destination.index
-                    elif not self.directed and edge.destination.index == v:
+
+                    elif edge.destination.index == v:
                         u = edge.origin.index
+
                     else:
                         continue
 
@@ -272,54 +282,95 @@ class EdgeListGraph:
 
         return result
 
-    def kruskal_mst(self):
-        if self.directed:
-            raise ValueError('MST requires an undirected graph')
+    # BFS
+    def bfs(self, start):
+        self.validate_vertex(start)
 
-        self.check_weights()
+        start = start.index
+
+        visited = [False] * self.n
+        queue = [start]
+        front = 0
+        result = []
+
+        visited[start] = True
+
+        while front < len(queue):
+
+            v = queue[front]
+            front += 1
+
+            result.append(v)
+
+            for edge in self.edge_list:
+
+                if edge.origin.index == v:
+                    u = edge.destination.index
+
+                elif edge.destination.index == v:
+                    u = edge.origin.index
+
+                else:
+                    continue
+
+                if not visited[u]:
+                    visited[u] = True
+                    queue.append(u)
+
+        return result
+    # Kruskal MST
+    def kruskal_mst(self):
 
         dsu = DSU(self.n)
         minheap = MinHeap()
+
         mst = []
         total = 0
 
-        for edge in self.edges():
-            u, v = edge.endpoints()
-            u, v = (u.index, v.index)
+        for edge in self.edge_list:
+
+            u = edge.origin.index
+            v = edge.destination.index
             w = edge.element()
+
             minheap.insert((w, u, v))
 
         while not minheap.is_empty() and len(mst) < self.n - 1:
+
             w, u, v = minheap.remove_min()
 
             if dsu.union(u, v):
+
                 mst.append((u, v, w))
                 total += w
 
-        return (mst, total)
+        return mst, total
 
+        # Boruvka MST
     def boruvka_mst(self):
-        if self.directed:
-            raise ValueError('MST requires an undirected graph')
-
-        self.check_weights()
 
         dsu = DSU(self.n)
+
         mst = []
         total = 0
         components = self.n
 
         while components > 1:
+
             cheapest = [None] * self.n
 
-            for edge in self.edges():
-                u, v = edge.endpoints()
-                u, v = (u.index, v.index)
+            for edge in self.edge_list:
+
+                u = edge.origin.index
+                v = edge.destination.index
+
                 w = edge.element()
+
                 ru = dsu.find(u)
                 rv = dsu.find(v)
 
                 if ru != rv:
+
                     if cheapest[ru] is None or w < cheapest[ru][2]:
                         cheapest[ru] = (u, v, w)
 
@@ -329,10 +380,13 @@ class EdgeListGraph:
             added = False
 
             for edge in cheapest:
+
                 if edge is not None:
+
                     u, v, w = edge
 
                     if dsu.union(u, v):
+
                         mst.append((u, v, w))
                         total += w
                         components -= 1
@@ -341,35 +395,4 @@ class EdgeListGraph:
             if not added:
                 break
 
-        return (mst, total)
-
-    def topological_order(self):
-        if not self.directed:
-            raise ValueError('Topological order requires a directed graph')
-
-        vertices = list(self.vertices())
-        in_degree = {v: self.degree(v, outgoing=False) for v in vertices}
-        queue = [v for v in vertices if in_degree[v] == 0]
-        front = 0
-        result = []
-
-        while front < len(queue):
-            v = queue[front]
-            front += 1
-            result.append(v)
-
-            for edge in self.incident_edges(v):
-                u = edge.opposite(v)
-                in_degree[u] -= 1
-
-                if in_degree[u] == 0:
-                    queue.append(u)
-
-        if len(result) != len(vertices):
-            raise ValueError('Graph contains a directed cycle')
-
-        return result
-
-    def topological_sort(self):
-        return self.topological_order()
-
+        return mst, total

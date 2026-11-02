@@ -30,46 +30,6 @@ class Edge:
     def element(self):
         return self.value
 
-class DSU:
-
-    def __init__(self, n=0):
-        self.parent = list(range(n))
-        self.rank = [0] * n
-
-    def find(self, x):
-        while self.parent[x] != x:
-            self.parent[x] = self.parent[self.parent[x]]
-            x = self.parent[x]
-
-        return x
-
-    def union(self, a, b):
-        ra = self.find(a)
-        rb = self.find(b)
-
-        if ra == rb:
-            return False
-
-        if self.rank[ra] < self.rank[rb]:
-            ra, rb = (rb, ra)
-
-        self.parent[rb] = ra
-
-        if self.rank[ra] == self.rank[rb]:
-            self.rank[ra] += 1
-
-        return True
-
-    def make_set(self, item):
-        if not isinstance(item, int) or isinstance(item, bool) or item != len(self.parent):
-            raise ValueError('Use the next unused integer position')
-
-        self.parent.append(item)
-        self.rank.append(0)
-
-        return item
-
-
 class PriorityQueue:
 
     def __init__(self):
@@ -131,38 +91,41 @@ class PriorityQueue:
     def __len__(self):
         return len(self.heap)
 
-
 class AdjacencyListGraph:
 
-    def __init__(self, directed=False):
+    def __init__(self):
         self.outgoing = {}
-        self.incoming = {} if directed else self.outgoing
-        self.directed = directed
         self.n = 0
-
-    def is_directed(self):
-        return self.directed
 
     def vertex_count(self):
         return len(self.outgoing)
 
     def edge_count(self):
-        return sum((1 for edge in self.edges()))
+        return sum(len(self.outgoing[v]) for v in self.outgoing) // 2
 
     def vertices(self):
         return iter(self.outgoing.keys())
 
     def edges(self):
-        edges = []
-        seen = set()
-
+        result = []
         for vertex in self.outgoing:
             for edge in self.outgoing[vertex]:
-                if edge not in seen:
-                    seen.add(edge)
-                    edges.append(edge)
+                if edge not in result:
+                    result.append(edge)
+        return iter(result)
 
-        return iter(edges)
+    def validate_vertex(self, v):
+        if v not in self.outgoing:
+            raise ValueError('Invalid vertex')
+
+    def get_index(self, vertex):
+        if isinstance(vertex, int):
+            if vertex < 0 or vertex >= self.n:
+                raise ValueError('Invalid vertex index')
+            return vertex
+
+        self.validate_vertex(vertex)
+        return vertex.index
 
     def get_edge(self, u, v):
         self.validate_vertex(u)
@@ -174,28 +137,19 @@ class AdjacencyListGraph:
 
         return None
 
-    def degree(self, vertex, outgoing=True):
+    def degree(self, vertex):
         self.validate_vertex(vertex)
+        return len(self.outgoing[vertex])
 
-        adj = self.outgoing if outgoing else self.incoming
-
-        return len(adj[vertex])
-
-    def incident_edges(self, vertex, outgoing=True):
+    def incident_edges(self, vertex):
         self.validate_vertex(vertex)
-
-        adj = self.outgoing if outgoing else self.incoming
-
-        return list(adj[vertex])
+        return list(self.outgoing[vertex])
 
     def insert_vertex(self, element=None):
         v = Vertex(element)
         v.index = self.n
+
         self.outgoing[v] = []
-
-        if self.directed:
-            self.incoming[v] = []
-
         self.n += 1
 
         return v
@@ -205,13 +159,14 @@ class AdjacencyListGraph:
         self.validate_vertex(v)
 
         if self.get_edge(u, v) is not None:
-            raise ValueError('Edge already exists between these vertices')
+            raise ValueError('Edge already exists')
 
         edge = Edge(u, v, element)
+
         self.outgoing[u].append(edge)
 
-        if self.directed or u is not v:
-            self.incoming[v].append(edge)
+        if u is not v:
+            self.outgoing[v].append(edge)
 
         return edge
 
@@ -219,35 +174,29 @@ class AdjacencyListGraph:
         if not isinstance(edge, Edge):
             raise ValueError('Invalid edge')
 
-        u, v = edge.endpoints()
+        u = edge.origin
+        v = edge.destination
+
         self.validate_vertex(u)
         self.validate_vertex(v)
 
-        if edge not in self.outgoing[u] or edge not in self.incoming[v]:
+        if edge not in self.outgoing[u]:
             raise ValueError('Invalid edge')
 
         self.outgoing[u].remove(edge)
 
-        if self.directed or u is not v:
-            self.incoming[v].remove(edge)
+        if u is not v:
+            self.outgoing[v].remove(edge)
 
     def remove_vertex(self, vertex):
         self.validate_vertex(vertex)
 
         touching = list(self.outgoing[vertex])
 
-        if self.directed:
-            for edge in self.incoming[vertex]:
-                if edge not in touching:
-                    touching.append(edge)
-
         for edge in touching:
             self.remove_edge(edge)
 
         del self.outgoing[vertex]
-
-        if self.directed:
-            del self.incoming[vertex]
 
         self.n -= 1
         vertex.index = -1
@@ -258,20 +207,22 @@ class AdjacencyListGraph:
     def bfs(self, start):
         start = self.get_index(start)
         vertices = list(self.vertices())
+
         visited = [False] * self.n
         queue = [start]
         front = 0
         result = []
+
         visited[start] = True
 
         while front < len(queue):
             v = queue[front]
             front += 1
+
             result.append(v)
 
             for edge in self.outgoing[vertices[v]]:
                 u = edge.opposite(vertices[v]).index
-                w = edge.element()
 
                 if not visited[u]:
                     visited[u] = True
@@ -282,6 +233,7 @@ class AdjacencyListGraph:
     def dfs(self, start):
         start = self.get_index(start)
         vertices = list(self.vertices())
+
         visited = [False] * self.n
         stack = [start]
         result = []
@@ -295,38 +247,33 @@ class AdjacencyListGraph:
 
                 for edge in self.outgoing[vertices[v]]:
                     u = edge.opposite(vertices[v]).index
-                    w = edge.element()
 
                     if not visited[u]:
                         stack.append(u)
 
         return result
 
+    # Prim's MST
     def prim_mst(self, start=None):
-        if self.directed:
-            raise ValueError('MST requires an undirected graph')
-
-        self.check_weights()
 
         if self.n == 0:
-            if start is not None:
-                self.get_index(start)
-
-            return ([], 0)
-
-        if start is None:
-            start = 0
-
+            return [], 0
+        start = 0
         start = self.get_index(start)
         vertices = list(self.vertices())
+
         visited = [False] * self.n
         pq = PriorityQueue()
+
         mst = []
         total = 0
+
         pq.insert(0, (None, start, 0))
 
         while not pq.is_empty():
+
             weight, edge = pq.remove_min()
+
             parent, v, w = edge
 
             if visited[v]:
@@ -339,35 +286,45 @@ class AdjacencyListGraph:
                 total += w
 
             for edge in self.outgoing[vertices[v]]:
+
                 u = edge.opposite(vertices[v]).index
                 edge_weight = edge.element()
 
                 if not visited[u]:
                     pq.insert(edge_weight, (v, u, edge_weight))
 
-        return (mst, total)
-
-
+        return mst, total
+    
+    # Dijkstra
     def dijkstra(self, source):
-        self.check_weights(nonnegative=True)
 
         start = self.get_index(source)
         vertices = list(self.vertices())
+
         dist = [float('inf')] * self.n
         parent = [None] * self.n
+
         dist[start] = 0
+
         pq = PriorityQueue()
         pq.insert(0, start)
 
-        while not pq.is_empty():
+        while not pq is None:
+
             d, v = pq.remove_min()
 
             if d > dist[v]:
                 continue
 
             for edge in self.outgoing[vertices[v]]:
-                u = edge.opposite(vertices[v]).index
+
+                if edge.origin is vertices[v]:
+                    u = edge.destination.index
+                else:
+                    u = edge.origin.index
+
                 w = edge.element()
+
                 new_dist = d + w
 
                 if new_dist < dist[u]:
@@ -375,35 +332,4 @@ class AdjacencyListGraph:
                     parent[u] = v
                     pq.insert(new_dist, u)
 
-        return (dist, parent)
-
-    def topological_order(self):
-        if not self.directed:
-            raise ValueError('Topological order requires a directed graph')
-
-        vertices = list(self.vertices())
-        in_degree = {v: self.degree(v, outgoing=False) for v in vertices}
-        queue = [v for v in vertices if in_degree[v] == 0]
-        front = 0
-        result = []
-
-        while front < len(queue):
-            v = queue[front]
-            front += 1
-            result.append(v)
-
-            for edge in self.incident_edges(v):
-                u = edge.opposite(v)
-                in_degree[u] -= 1
-
-                if in_degree[u] == 0:
-                    queue.append(u)
-
-        if len(result) != len(vertices):
-            raise ValueError('Graph contains a directed cycle')
-
-        return result
-
-    def topological_sort(self):
-        return self.topological_order()
-
+        return dist, parent

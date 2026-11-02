@@ -323,8 +323,7 @@ class AdjacencyMatrixGraph:
 
                 for u in range(self.n):
                     if self.present[v][u] is not None and (not visited[u]):
-                        stack.append(u)
-
+                        stack.append(u)                    
         return result
 
     def prim_mst(self, start=None):

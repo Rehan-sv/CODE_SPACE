@@ -196,7 +196,7 @@ class EdgeListGraph:
 
             if dsu.union(u, v):
                 mst.append((u, v, w))
-               +     total += w
+                total += w
 
         return mst, total
 
