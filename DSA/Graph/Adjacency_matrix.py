@@ -149,67 +149,98 @@ class PriorityQueue:
     def __len__(self):
         return len(self.heap)
 
-
-
 class AdjacencyMatrixGraph:
 
-    def __init__(self, directed=False):
+    def __init__(self):
         self.vertex_list = []
         self.index = {}
         self.present = []
         self.weight = []
-        self.directed = directed
         self.n = 0
 
-    def is_directed(self):
-        return self.directed
-
+    # Vertex count
     def vertex_count(self):
         return len(self.vertex_list)
 
+    # Edge count
     def edge_count(self):
-        return sum((1 for edge in self.edges()))
+        count = 0
 
+        for u in range(self.n):
+            for v in range(self.n):
+                if self.present[u][v] is not None:
+                    count += 1
+
+        return count
+
+    # Vertices
     def vertices(self):
         return iter(self.vertex_list)
 
+    # Edges
     def edges(self):
-        edges = []
+        result = []
 
-        for u in range(len(self.vertex_list)):
-            for v in range(len(self.vertex_list)):
-                if self.present[u][v] is not None and (self.directed or u <= v):
-                    edges.append(self.present[u][v])
+        for u in range(self.n):
+            for v in range(self.n):
+                if self.present[u][v] is not None:
+                    result.append(self.present[u][v])
 
-        return iter(edges)
+        return iter(result)
 
+    # Validate vertex
+    def validate_vertex(self, vertex):
+        if vertex not in self.index:
+            raise ValueError('Invalid vertex')
+
+    # Get index
+    def get_index(self, vertex):
+        if isinstance(vertex, int):
+            if vertex < 0 or vertex >= self.n:
+                raise ValueError('Invalid vertex index')
+
+            return vertex
+
+        self.validate_vertex(vertex)
+        return self.index[vertex]
+
+    # Get edge
     def get_edge(self, u, v):
         self.validate_vertex(u)
         self.validate_vertex(v)
 
         return self.present[self.index[u]][self.index[v]]
 
+    # Degree
     def degree(self, vertex, outgoing=True):
         return len(self.incident_edges(vertex, outgoing))
 
+    # Incident edges
     def incident_edges(self, vertex, outgoing=True):
         self.validate_vertex(vertex)
 
         v = self.index[vertex]
         result = []
 
-        for u in range(len(self.vertex_list)):
-            edge = self.present[v][u] if outgoing else self.present[u][v]
+        for u in range(self.n):
+
+            if outgoing:
+                edge = self.present[v][u]
+            else:
+                edge = self.present[u][v]
 
             if edge is not None:
                 result.append(edge)
 
         return result
 
+    # Insert vertex
     def insert_vertex(self, element=None):
         v = Vertex(element)
+
         v.index = self.n
-        self.index[v] = len(self.vertex_list)
+        self.index[v] = self.n
+
         self.vertex_list.append(v)
 
         for row in self.present:
@@ -220,10 +251,12 @@ class AdjacencyMatrixGraph:
 
         self.present.append([None] * len(self.vertex_list))
         self.weight.append([None] * len(self.vertex_list))
+
         self.n += 1
 
         return v
 
+    # Insert edge
     def insert_edge(self, u, v, element=None):
         self.validate_vertex(u)
         self.validate_vertex(v)
@@ -232,23 +265,23 @@ class AdjacencyMatrixGraph:
         j = self.index[v]
 
         if self.present[i][j] is not None:
-            raise ValueError('Edge already exists between these vertices')
+            raise ValueError('Edge already exists')
 
         edge = Edge(u, v, element)
+
         self.present[i][j] = edge
         self.weight[i][j] = element
 
-        if not self.directed:
-            self.present[j][i] = edge
-            self.weight[j][i] = element
-
         return edge
 
+    # Remove edge
     def remove_edge(self, edge):
         if not isinstance(edge, Edge):
             raise ValueError('Invalid edge')
 
-        u, v = edge.endpoints()
+        u = edge.origin
+        v = edge.destination
+
         self.validate_vertex(u)
         self.validate_vertex(v)
 
@@ -261,14 +294,12 @@ class AdjacencyMatrixGraph:
         self.present[i][j] = None
         self.weight[i][j] = None
 
-        if not self.directed:
-            self.present[j][i] = None
-            self.weight[j][i] = None
-
+    # Remove vertex
     def remove_vertex(self, vertex):
         self.validate_vertex(vertex)
 
         v = self.index.pop(vertex)
+
         self.vertex_list.pop(v)
         self.present.pop(v)
         self.weight.pop(v)
@@ -279,77 +310,90 @@ class AdjacencyMatrixGraph:
         for row in self.weight:
             row.pop(v)
 
-        for i in range(v, len(self.vertex_list)):
-            self.index[self.vertex_list[i]] = i
-
         self.n -= 1
         vertex.index = -1
 
-        for i, v in enumerate(self.vertices()):
-            v.index = i
+        for i in range(v, self.n):
+            self.index[self.vertex_list[i]] = i
 
+        for i, vertex in enumerate(self.vertices()):
+            vertex.index = i
+
+    # BFS
     def bfs(self, start):
+
         start = self.get_index(start)
+
         visited = [False] * self.n
         queue = [start]
         front = 0
         result = []
+
         visited[start] = True
 
         while front < len(queue):
+
             v = queue[front]
             front += 1
+
             result.append(v)
 
             for u in range(self.n):
-                if self.present[v][u] is not None and (not visited[u]):
+
+                if self.present[v][u] is not None and not visited[u]:
                     visited[u] = True
                     queue.append(u)
 
         return result
 
+    # DFS
     def dfs(self, start):
+
         start = self.get_index(start)
+
         visited = [False] * self.n
         stack = [start]
         result = []
 
         while stack:
+
             v = stack.pop()
 
             if not visited[v]:
+
                 visited[v] = True
                 result.append(v)
 
                 for u in range(self.n):
-                    if self.present[v][u] is not None and (not visited[u]):
-                        stack.append(u)                    
+
+                    if self.present[v][u] is not None and not visited[u]:
+                        stack.append(u)
+
         return result
 
+    # Prim's MST
     def prim_mst(self, start=None):
-        if self.directed:
-            raise ValueError('MST requires an undirected graph')
-
-        self.check_weights()
 
         if self.n == 0:
-            if start is not None:
-                self.get_index(start)
-
-            return ([], 0)
+            return [], 0
 
         if start is None:
             start = 0
 
         start = self.get_index(start)
+
         visited = [False] * self.n
         pq = PriorityQueue()
+
         mst = []
         total = 0
+
         pq.insert(0, (None, start, 0))
 
-        while not pq.is_empty():
+        while pq.heap:
+
             weight, edge = pq.remove_min()
+
             parent, v, w = edge
 
             if visited[v]:
@@ -362,66 +406,87 @@ class AdjacencyMatrixGraph:
                 total += w
 
             for u in range(self.n):
+
                 edge_weight = self.weight[v][u]
 
-                if edge_weight is not None and (not visited[u]):
+                if edge_weight is not None and not visited[u]:
                     pq.insert(edge_weight, (v, u, edge_weight))
 
-        return (mst, total)
+        return mst, total
 
-
+    # Dijkstra
     def dijkstra(self, source):
-        self.check_weights(nonnegative=True)
 
         start = self.get_index(source)
+
         dist = [float('inf')] * self.n
         parent = [None] * self.n
+
         dist[start] = 0
+
         pq = PriorityQueue()
         pq.insert(0, start)
 
-        while not pq.is_empty():
+        while pq.heap:
+
             d, v = pq.remove_min()
 
             if d > dist[v]:
                 continue
 
             for u in range(self.n):
+
                 w = self.weight[v][u]
 
                 if w is not None:
+
                     new_dist = d + w
 
                     if new_dist < dist[u]:
                         dist[u] = new_dist
                         parent[u] = v
+
                         pq.insert(new_dist, u)
 
-        return (dist, parent)
+        return dist, parent
 
+    # Topological Order
     def topological_order(self):
-        if not self.directed:
-            raise ValueError('Topological order requires a directed graph')
 
-        vertices = list(self.vertices())
-        in_degree = {v: self.degree(v, outgoing=False) for v in vertices}
-        queue = [v for v in vertices if in_degree[v] == 0]
+        in_degree = [0] * self.n
+
+        for u in range(self.n):
+            for v in range(self.n):
+
+                if self.present[u][v] is not None:
+                    in_degree[v] += 1
+
+        queue = []
+
+        for v in range(self.n):
+            if in_degree[v] == 0:
+                queue.append(v)
+
         front = 0
         result = []
 
         while front < len(queue):
+
             v = queue[front]
             front += 1
+
             result.append(v)
 
-            for edge in self.incident_edges(v):
-                u = edge.opposite(v)
-                in_degree[u] -= 1
+            for u in range(self.n):
 
-                if in_degree[u] == 0:
-                    queue.append(u)
+                if self.present[v][u] is not None:
 
-        if len(result) != len(vertices):
+                    in_degree[u] -= 1
+
+                    if in_degree[u] == 0:
+                        queue.append(u)
+
+        if len(result) != self.n:
             raise ValueError('Graph contains a directed cycle')
 
         return result
