@@ -157,7 +157,7 @@ class AdjacencyMatrixGraph:
         self.present = []
         self.weight = []
         self.n = 0
-
+ 
     # Vertex count
     def vertex_count(self):
         return len(self.vertex_list)
